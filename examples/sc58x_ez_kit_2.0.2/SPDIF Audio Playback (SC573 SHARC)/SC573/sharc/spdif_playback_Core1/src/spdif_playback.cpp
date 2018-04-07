@@ -24,7 +24,7 @@ to the terms of the associated Analog Devices License Agreement.
 
 #include <sys/platform.h>
 /* SPU Manager includes */
-#include <drivers/spdif/adi_spdif_rx.h>
+//#include <drivers/spdif/adi_spdif_rx.h>
 #include <drivers/dac/adau1962a/adi_adau1962a.h>
 #include <drivers/asrc/adi_asrc.h>
 #include <stdio.h>
@@ -36,6 +36,7 @@ to the terms of the associated Analog Devices License Agreement.
 #include "SystemProtectionService.h"
 #include "PrecisionClockGenerator.h"
 #include "GeneralPurposeIO.h"
+#include "SpdifDevice.h"
 
 #include <SRU.h>
 
@@ -47,9 +48,9 @@ to the terms of the associated Analog Devices License Agreement.
 static uint8_t TwiMemory[ADI_TWI_MEMORY_SIZE];
 
 
-/* RxSpdif  */
-static uint8_t RxSpdifMemory[1000u];
-static ADI_SPDIF_RX_HANDLE phRxSpdif;
+///* RxSpdif  */
+//static uint8_t RxSpdifMemory[1000u];
+//static ADI_SPDIF_RX_HANDLE phRxSpdif;
 
 /* ADAU1962A DAC DATA */
 static ADI_ADAU1962A_HANDLE phAdau1962a;
@@ -93,7 +94,7 @@ static int8_t DacBuf[AUDIO_BUFFER_SIZE * 2];
 /* Initialize ASRC on the side of Rx Spdif */
 uint32_t    AsrcInit(void);
 /* Initialize Rx Spdif peripherals */
-uint32_t	SpdifInit(void);
+//uint32_t	SpdifInit(void);
 /* Initializes DAC */
 uint32_t    Adau1962aInit(void);
 /* Submit buffers to ASRC */
@@ -140,12 +141,12 @@ int main()
     /* Initialize GPIO for ADC/DAC reset control */
     GeneralPurposeIO gpio;
 
-
 	/* Initialize SPDIF */
-	if(Result == 0u)
-	{
-		Result = SpdifInit();
-	}
+    SpdifDevice spdif;
+//	if(Result == 0u)
+//	{
+//		Result = SpdifInit();
+//	}
 
     /* Initialize Asynchronous Rate Converter for the DAC*/
     if(Result == 0u)
@@ -179,10 +180,11 @@ int main()
     }
 
 	/* Enable Rx SPDIF */
-	if(Result == 0u)
-	{
-		Result = (uint32_t)adi_spdif_Rx_Enable(phRxSpdif, true);
-	}
+    spdif.Enable();
+//	if(Result == 0u)
+//	{
+//		Result = (uint32_t)adi_spdif_Rx_Enable(phRxSpdif, true);
+//	}
 
 	/* Enable the PCG */
 	pcg.Enable();
@@ -214,8 +216,10 @@ int main()
         }
 
         // close devices
-		adi_spdif_Rx_Enable(phRxSpdif, false);
-		adi_spdif_Rx_Close(phRxSpdif);
+        spdif.Disable();
+        spdif.Close();
+//		adi_spdif_Rx_Enable(phRxSpdif, false);
+//		adi_spdif_Rx_Close(phRxSpdif);
 
         /* Disable and close DAC */
         adi_adau1962a_Enable(phAdau1962a, false);
@@ -297,36 +301,36 @@ uint32_t AsrcInit(void)
 
 
 
-/*
- * Opens and initializes Tx and Rx SPDIF Device.
- *
- * Parameters
- *  None
- *
- * Returns
- *  0 if success, other values for error
- *
- */
-uint32_t SpdifInit(void)
-{
-	uint32_t Result = 0u;
-    /* Open Rx SPDIF */
-    if( adi_spdif_Rx_Open(0u,
-                          &RxSpdifMemory[0],
-                          ADI_SPDIF_RX_MEMORY_SIZE,
-                          &phRxSpdif) != ADI_SPDIF_RX_SUCCESS)
-    {
-        Result = 1u;
-    }
-
-    /*  rx auto restart*/
-    if( adi_spdif_Rx_EnableAutoAudioRestart(phRxSpdif, true) != ADI_SPDIF_RX_SUCCESS)
-    {
-        Result = 1u;
-    }
-
-	return Result;
-}
+///*
+// * Opens and initializes Tx and Rx SPDIF Device.
+// *
+// * Parameters
+// *  None
+// *
+// * Returns
+// *  0 if success, other values for error
+// *
+// */
+//uint32_t SpdifInit(void)
+//{
+//	uint32_t Result = 0u;
+//    /* Open Rx SPDIF */
+//    if( adi_spdif_Rx_Open(0u,
+//                          &RxSpdifMemory[0],
+//                          ADI_SPDIF_RX_MEMORY_SIZE,
+//                          &phRxSpdif) != ADI_SPDIF_RX_SUCCESS)
+//    {
+//        Result = 1u;
+//    }
+//
+//    /*  rx auto restart*/
+//    if( adi_spdif_Rx_EnableAutoAudioRestart(phRxSpdif, true) != ADI_SPDIF_RX_SUCCESS)
+//    {
+//        Result = 1u;
+//    }
+//
+//	return Result;
+//}
 
 /*
  * Opens and initializes ADAU1962A DAC Device.
