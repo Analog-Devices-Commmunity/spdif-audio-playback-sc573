@@ -24,8 +24,8 @@ to the terms of the associated Analog Devices License Agreement.
 
 #include <sys/platform.h>
 /* SPU Manager includes */
-#include <services/spu/adi_spu.h>
-#include <services/pwr/adi_pwr.h>
+//#include <services/spu/adi_spu.h>
+//#include <services/pwr/adi_pwr.h>
 #include <services/gpio/adi_gpio.h>
 #include <drivers/spdif/adi_spdif_rx.h>
 #include <drivers/dac/adau1962a/adi_adau1962a.h>
@@ -34,9 +34,10 @@ to the terms of the associated Analog Devices License Agreement.
 #include <stdio.h>
 #include <string.h>
 #include <math.h>
-#include "spdif_playback.h"
+#include "../../../../spdif_playback.h"
 #include "adi_initialize.h"
 #include "PowerService.h"
+#include "SystemProtectionService.h"
 
 #include <SRU.h>
 
@@ -94,19 +95,9 @@ ADI_CACHE_ALIGN static int8_t AsrcBuf[ADI_CACHE_ROUND_UP_SIZE(AUDIO_BUFFER_SIZE 
 /* Dac linear buffer that is divided into 2 sub buffers; ping and pong  */
 static int8_t DacBuf[AUDIO_BUFFER_SIZE * 2];
 
-#if defined(__ADSPBF707_FAMILY__) || defined(__ADSP215xx__)
-/* Memory required for the SPU operation */
-static uint8_t SpuMemory[ADI_SPU_MEMORY_SIZE];
-
-/* SPU handle */
-static ADI_SPU_HANDLE hSpu;
-#endif
 
 /*=============  L O C A L    F U N C T I O N    P R O T O T Y P E S =============*/
-/* Initialize power service */
-//uint32_t    PowerServiceInit(void);
-/* Initialize SPU */
-uint32_t    SpuInit(void);
+
 /* Initialize PCG */
 uint32_t 	PcgInit(void);
 /* Initialize ASRC on the side of Rx Spdif */
@@ -154,20 +145,10 @@ int main()
     /* configure System Event Controller SEC and Signal Routing Unit SRU */
     adi_initComponents();
 
-    /* Software Switch Configuration for the EZ-Board */
-    //ConfigSoftSwitches();
-    PowerService ps = new PowerService();
-    /* Initialize power service */
-    if(Result == 0u)
-    {
-        Result = PowerServiceInit();
-    }
+    PowerService ps;
 
     /* Initialize SPU */
-    if(Result == 0u)
-    {
-        Result = SpuInit();
-    }
+    SystemProtectionService sps;
 
 	/* Initialize Precision Clock Generator */
 	if(Result == 0u)
@@ -284,86 +265,6 @@ int main()
     }
 
     return 0;
-}
-
-/*
- * Initializes power service
- */
-uint32_t PowerServiceInit(void)
-{
-    uint32_t Result = 0u;
-
-
-	/* For CCLK=450MHz, CGU0 is used to generate the OCLK_0 of 225MHz. */
-
-	/* Initialize the power service to CLKIN=25MHz. This API is called so that we can use other low level APIs to
-	 * modify individual clocks. adi_pwr_SetFreq() is not called.*/
-	if((uint32_t)adi_pwr_Init(CGU_DEV, CLKIN) != 0u)
-		{
-			/* return error */
-			return 1u;
-		}
-
-	/* For S/PDIF sampling frequencies (24 - 96kHz),Configure CLK05 to between 170 MHz to 180 MHz.
-	 * For S/PDIF sampling frequencies (32 -192kHz),Configure CLK05 to 225 MHz.*/
-
-	/* Use OCLK_0 to get S/PDIF-Rx (CDU_CLKO5) freq of 225MHz. */
-	if((uint32_t)adi_pwr_SetClkDivideRegister(CGU_DEV, ADI_PWR_CLK_DIV_OSEL, 2) != 0u)
-		{
-			/* return error */
-			return 1u;
-		}
-	/* Use OCLK_0 to get S/PDIF-Rx (CDU_CLKO5) freq of 225MHz. */
-	if((uint32_t)adi_pwr_ConfigCduInputClock(ADI_PWR_CDU_CLKIN_0, ADI_PWR_CDU_CLKOUT_5) != 0u)
-	{
-		/* return error */
-		return 1u;
-	}
-
-    return Result;
-}
-
-uint32_t SpuInit(void)
-{
-    uint32_t Result = 0u;
-
-    /* Initialize SPU Service */
-    if(adi_spu_Init(0u, SpuMemory, NULL, NULL, &hSpu) != ADI_SPU_SUCCESS)
-    {
-        DBG_MSG("Failed to initialize SPU service\n");
-        return (ADI_SPU_FAILURE);
-    }
-
-
-    /* Make SPORT 0A to generate secure transactions */
-    if(adi_spu_EnableMasterSecure(hSpu, SPORT_0A_SPU_PID, true) != ADI_SPU_SUCCESS)
-    {
-        DBG_MSG("Failed to enable Master secure for SPORT 0A\n");
-        return (ADI_SPU_FAILURE);
-    }
-
-    /* Make SPORT 2B to generate secure transactions */
-    if(adi_spu_EnableMasterSecure(hSpu, SPORT_2B_SPU_PID, true) != ADI_SPU_SUCCESS)
-    {
-        DBG_MSG("Failed to enable Master secure for SPORT 2B\n");
-        return (ADI_SPU_FAILURE);
-    }
-
-    /* Make SPORT 0A DMA to generate secure transactions */
-    if(adi_spu_EnableMasterSecure(hSpu, SPORT_0A_DMA10_SPU_PID, true) != ADI_SPU_SUCCESS)
-    {
-        DBG_MSG("Failed to enable Master secure for SPORT 0A DMA\n");
-        return (ADI_SPU_FAILURE);
-    }
-
-    /* Make SPORT 2B DMA to generate secure transactions */
-    if(adi_spu_EnableMasterSecure(hSpu, SPORT_2B_DMA11_SPU_PID, true) != ADI_SPU_SUCCESS)
-    {
-        DBG_MSG("Failed to enable Master secure for SPORT 2B DMA\n");
-        return (ADI_SPU_FAILURE);
-    }
-
-    return (Result);
 }
 
 /*
