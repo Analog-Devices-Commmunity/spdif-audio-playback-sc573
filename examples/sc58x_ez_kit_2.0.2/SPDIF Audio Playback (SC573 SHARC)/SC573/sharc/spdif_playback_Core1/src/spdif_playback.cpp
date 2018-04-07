@@ -24,13 +24,10 @@ to the terms of the associated Analog Devices License Agreement.
 
 #include <sys/platform.h>
 /* SPU Manager includes */
-//#include <services/spu/adi_spu.h>
-//#include <services/pwr/adi_pwr.h>
 #include <services/gpio/adi_gpio.h>
 #include <drivers/spdif/adi_spdif_rx.h>
 #include <drivers/dac/adau1962a/adi_adau1962a.h>
 #include <drivers/asrc/adi_asrc.h>
-#include <services/pcg/adi_pcg.h>
 #include <stdio.h>
 #include <string.h>
 #include <math.h>
@@ -38,6 +35,7 @@ to the terms of the associated Analog Devices License Agreement.
 #include "adi_initialize.h"
 #include "PowerService.h"
 #include "SystemProtectionService.h"
+#include "PrecisionClockGenerator.h"
 
 #include <SRU.h>
 
@@ -69,10 +67,6 @@ static ADI_ASRC_HANDLE phAsrc0;
 static uint8_t OpAsrcSportMemory[ADI_SPORT_DMA_MEMORY_SIZE];
 static ADI_ASRC_SPORT_CONFIG OpAsrcSportConfig;
 
-/* PCG - A */
-static uint8_t PcgMemoryA[ADI_PCG_MEMORY_SIZE];
-static ADI_PCG_HANDLE phPcgA;
-
 /* Counter to keep track of number of ADC buffers processed */
 static volatile uint32_t AsrcCount = 0u;
 /* Counter to keep track of number of DAC buffers processed */
@@ -98,8 +92,6 @@ static int8_t DacBuf[AUDIO_BUFFER_SIZE * 2];
 
 /*=============  L O C A L    F U N C T I O N    P R O T O T Y P E S =============*/
 
-/* Initialize PCG */
-uint32_t 	PcgInit(void);
 /* Initialize ASRC on the side of Rx Spdif */
 uint32_t    AsrcInit(void);
 /* Initialize GPIO and reset peripherals */
@@ -122,11 +114,6 @@ void AsrcCallback(void *pCBParam, uint32_t nEvent, void *pArg);
 /* DAC callback */
 void DacCallback(void *pCBParam, uint32_t nEvent, void *pArg);
 
-/*=============  E X T E R N A L    F U N C T I O N    P R O T O T Y P E S =============*/
-
-/* Configures soft switches */
-//extern void ConfigSoftSwitches(void);
-
 /*=============  C O D E  =============*/
 
 /*
@@ -145,16 +132,14 @@ int main()
     /* configure System Event Controller SEC and Signal Routing Unit SRU */
     adi_initComponents();
 
+    /* Initialize power service */
     PowerService ps;
 
     /* Initialize SPU */
     SystemProtectionService sps;
 
 	/* Initialize Precision Clock Generator */
-	if(Result == 0u)
-	{
-		Result = PcgInit();
-	}
+    PrecisionClockGenerator pcg;
 
     /* Initialize GPIO for ADC/DAC reset control */
     if(Result == 0u)
@@ -206,10 +191,7 @@ int main()
 	}
 
 	/* Enable the PCG */
-	if(Result == 0u)
-	{
-		Result = (uint32_t)adi_pcg_Enable(phPcgA, true);
-	}
+	pcg.Enable();
 
     if(Result == 0u)
     {
@@ -250,9 +232,8 @@ int main()
         adi_asrc_Close(phAsrc0);
 
 		/* Disable and close PCG */
-		adi_pcg_Enable    (phPcgA, false);
-		adi_pcg_Close     (phPcgA);
-
+        pcg.Disable();
+        pcg.Close();
     }
 
     if (Result == 0u)
@@ -363,73 +344,6 @@ uint32_t GpioInit(void)
     for (i = DELAY_COUNT; i ; i --);
 
     return Result;
-}
-
-/*
- * Opens and initializes PCG Device.
- *
- * Parameters
- *  None
- *
- * Returns
- *  0 if success, other values for error
- *
- */
-uint32_t PcgInit(void)
-{
-	uint32_t Result = 0u;
-
-	/* Init PCG A
-	 *
-	 * Using ext clk 24.576MHz
-	 *
-	 * CLKA 12.288 MHz
-	 * FSA	192 kHz
-	 */
-    /* Open PCG A */
-    if( adi_pcg_Open(0u,
-                     &PcgMemoryA[0],
-                     ADI_PCG_MEMORY_SIZE,
-                     &phPcgA) != ADI_PCG_SUCCESS)
-    {
-        Result = 1u;
-    }
-
-    /* Select FS and clock outputs for PCGA */
-	if((uint32_t)adi_pcg_SelectOutput(phPcgA, ADI_PCG_OUT_CLK_FS) != 0u)
-	{
-		/* return error */
-		return 1u;
-	}
-
-    /* Set the PCGA input clock source to external*/
-	if((uint32_t)adi_pcg_ClockSource(phPcgA, ADI_PCG_CLK_EXT) != 0u)
-	{
-		/* return error */
-		return 1u;
-	}
-
-    /* Set the PCGA input fs to external */
-	if((uint32_t)adi_pcg_FrameSyncSource(phPcgA, ADI_PCG_FS_EXT) != 0u)
-	{
-		/* return error */
-		return 1u;
-	}
-
-	/* Clock A 12.288 MHz */
-	if((uint32_t)adi_pcg_ClockDivide(phPcgA, 0x2) != 0u)
-	{
-		/* return error */
-		return 1u;
-	}
-    /* FS A 192 kHz */
-	if((uint32_t)adi_pcg_FrameSyncDivide(phPcgA, 0x80) != 0u)
-	{
-		/* return error */
-		return 1u;
-	}
-
-	return Result;
 }
 
 /*

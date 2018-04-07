@@ -8,11 +8,8 @@
 #include "PowerService.h"
 
 #include "../../../../spdif_playback.h"
-//#include <stdexcept>
-//#include <string>
 #include <stdio.h>
 #include <stdlib.h>
-//using namespace std;
 
 void PowerService::CheckPwrResult(ADI_PWR_RESULT expected, ADI_PWR_RESULT result)
 {
