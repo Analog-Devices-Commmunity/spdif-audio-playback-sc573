@@ -133,7 +133,7 @@ void DacCallback(void *pCBParam, uint32_t nEvent, void *pArg);
 /*=============  E X T E R N A L    F U N C T I O N    P R O T O T Y P E S =============*/
 
 /* Configures soft switches */
-extern void ConfigSoftSwitches(void);
+//extern void ConfigSoftSwitches(void);
 
 /*=============  C O D E  =============*/
 
@@ -154,7 +154,7 @@ int main()
     adi_initComponents();
 
     /* Software Switch Configuration for the EZ-Board */
-    ConfigSoftSwitches();
+    //ConfigSoftSwitches();
 
     /* Initialize power service */
     if(Result == 0u)

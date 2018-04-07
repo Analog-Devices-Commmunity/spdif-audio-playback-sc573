@@ -6,6 +6,9 @@
 #include <sys/adi_core.h>
 #include "adi_initialize.h"
 
+/* Configures soft switches */
+extern void ConfigSoftSwitches(void);
+
 /** 
  * If you want to use command program arguments, then place them in the following string. 
  */
@@ -20,6 +23,8 @@ int main(int argc, char *argv[])
 	 */
 	adi_initComponents();
 	
+    /* Software Switch Configuration for the EZ-Board */
+    ConfigSoftSwitches();
 	/**
 	 * The default startup code does not include any functionality to allow
 	 * core 0 to enable core 1 and core 2. A convenient way to enable

@@ -32,6 +32,13 @@
 		<nature>org.eclipse.cdt.managedbuilder.core.ScannerConfigNature</nature>
 		<nature>com.analog.crosscore.managedbuilder.core.CCESProjectNature</nature>
 	</natures>
+	<linkedResources>
+		<link>
+			<name>src/SoftConfig_SC573.c</name>
+			<type>1</type>
+			<locationURI>PARENT-2-PROJECT_LOC/SoftConfig_SC573.c</locationURI>
+		</link>
+	</linkedResources>
 	<variableList>
 		<variable>
 			<name>CCES</name>

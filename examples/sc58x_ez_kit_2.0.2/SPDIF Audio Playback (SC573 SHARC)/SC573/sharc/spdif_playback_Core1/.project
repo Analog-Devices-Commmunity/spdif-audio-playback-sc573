@@ -39,11 +39,6 @@
 			<locationURI>PARENT-2-PROJECT_LOC/Readme_spdif_playback.html</locationURI>
 		</link>
 		<link>
-			<name>src/SoftConfig_SC573.c</name>
-			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/SoftConfig_SC573.c</locationURI>
-		</link>
-		<link>
 			<name>src/spdif_playback.c</name>
 			<type>1</type>
 			<locationURI>PARENT-3-PROJECT_LOC/spdif_playback.c</locationURI>
