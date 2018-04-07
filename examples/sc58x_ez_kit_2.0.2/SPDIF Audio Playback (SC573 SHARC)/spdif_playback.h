@@ -44,7 +44,8 @@ to the terms of the associated Analog Devices License Agreement.
 /* DAC Master clock frequency */
 #define ADAU1962A_MCLK_IN       (24576000u)
 /* DAC sample rate */
-#define SAMPLE_RATE   			(48000u)
+//#define SAMPLE_RATE   			(48000u)
+#define SAMPLE_RATE   			(192000u)
 
 /* ADAU1962A SPORT config parameters */
 #define LR_B_CLK_MASTER_1962    (true)
@@ -54,8 +55,8 @@ to the terms of the associated Analog Devices License Agreement.
 /* Sine wave parameters */
 #define REFERENCE_FREQ 				(3000u)
 #define SAMPLES_PER_PERIOD 			((SAMPLE_RATE) / (REFERENCE_FREQ))
-#define AMPLITUDE					((float)3388607)
-#define PI							((float)3.141592765309)
+//#define AMPLITUDE					((float)3388607)
+//#define PI							((float)3.141592765309)
 #define SAMPLE_SIZE 				(4u)
 
 #define NUM_CHANNELS				(2u)
