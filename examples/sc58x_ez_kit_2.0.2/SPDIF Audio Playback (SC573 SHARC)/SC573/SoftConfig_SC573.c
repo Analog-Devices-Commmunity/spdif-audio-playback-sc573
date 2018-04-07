@@ -85,10 +85,10 @@ static SWITCH_CONFIG SwitchConfig0[] =
   | | | | | | 1--- ~UART0_FLOW_EN       |       | | | | | | 1--- ~ADAU1979_EN
   | | | | | | | 0- ~EEPROM_EN           |       | | | | | | | 0- ~ADAU1962_EN
   | | | | | | | |                       |       | | | | | | | |
-  N X N N N Y Y Y                       |       Y N N Y N Y Y Y     ( Active Y or N )
-  0 0 0 0 0 0 0 0                       |       0 1 0 0 1 1 0 0     ( value being set )
+  N X N N N Y Y Y                       |       N Y Y Y N Y Y Y     ( Active Y or N )
+  0 0 0 0 0 0 0 0                       |       1 0 0 0 1 1 0 0     ( value being set )
 */
-  { 0x12u, 0x00u },                               { 0x13u, 0x4Cu },
+  { 0x12u, 0x00u },                               { 0x13u, 0x8Cu },
 
  /*
   * specify inputs/outputs
