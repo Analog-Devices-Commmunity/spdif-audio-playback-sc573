@@ -44,7 +44,6 @@ to the terms of the associated Analog Devices License Agreement.
 /* DAC Master clock frequency */
 #define ADAU1962A_MCLK_IN       (24576000u)
 /* DAC sample rate */
-//#define SAMPLE_RATE   			(48000u)
 #define SAMPLE_RATE   			(192000u)
 
 /* ADAU1962A SPORT config parameters */
@@ -52,32 +51,26 @@ to the terms of the associated Analog Devices License Agreement.
 #define BCLK_RISING_1962 	    (true)
 #define LRCLK_HI_LO_1962        (true)
 
-/* Sine wave parameters */
-#define REFERENCE_FREQ 				(3000u)
-#define SAMPLES_PER_PERIOD 			((SAMPLE_RATE) / (REFERENCE_FREQ))
-//#define AMPLITUDE					((float)3388607)
-//#define PI							((float)3.141592765309)
-#define SAMPLE_SIZE 				(4u)
-
-#define NUM_CHANNELS				(2u)
 
 /* Macro to set buffer size */
-#define AUDIO_BUFFER_SIZE 	        (SAMPLES_PER_PERIOD * NUM_CHANNELS * SAMPLE_SIZE * 4u)
+#define SAMPLE_SIZE 				(4u)
+#define NUM_CHANNELS				(2u)
+#define SAMPLES_PER_PERIOD_3K		(32u)
+#define RESAMPLE_FACTOR				(4u)
+#define SAMPLES_PER_PERIOD_12K		(SAMPLES_PER_PERIOD_3K*RESAMPLE_FACTOR)
+#define SAMPLES_PER_PERIOD_48K		(SAMPLES_PER_PERIOD_12K*RESAMPLE_FACTOR)
+#define SAMPLES_PER_PERIOD_192K		(SAMPLES_PER_PERIOD_48K*RESAMPLE_FACTOR)
+
+#define SAMPLES_PER_PERIOD			(SAMPLES_PER_PERIOD_192K)
+#define SAMPLE_BUFFER_SIZE 			(SAMPLE_SIZE * SAMPLES_PER_PERIOD)
+#define AUDIO_BUFFER_SIZE 	        (SAMPLE_BUFFER_SIZE * NUM_CHANNELS)
 
 /* SPU Peripheral ID */
-//#if defined(__ADSPBF707_FAMILY__) || defined(__ADSPSC589_FAMILY__)
-//#define	SPORT_0A_SPU_PID		    (15u)
-//#define	SPORT_4B_SPU_PID		    (24u)
-//#define	SPORT_0A_DMA10_SPU_PID		(66u)
-//#define	SPORT_4B_DMA11_SPU_PID		(75u)
-//#elif defined(__ADSPSC573_FAMILY__)
+
 #define	SPORT_0A_SPU_PID		    (ADI_SPU0_SPORT0A_ID)
 #define	SPORT_2B_SPU_PID		    (ADI_SPU0_SPORT2B_ID)
 #define	SPORT_0A_DMA10_SPU_PID		(ADI_SPU0_DMA0_ID)
 #define	SPORT_2B_DMA11_SPU_PID		(ADI_SPU0_DMA5_ID)
-//#else
-//#error "processor is not supported"
-//#endif
 
 #define PIN_MASK (0x0000007Fu)
 #define PIN_LEN  (7u)

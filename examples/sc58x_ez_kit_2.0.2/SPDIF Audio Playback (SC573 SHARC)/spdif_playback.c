@@ -477,15 +477,6 @@ uint32_t PcgInit(void)
 {
 	uint32_t Result = 0u;
 
-//	/* Init PCG A
-//	 *
-//	 * Using ext clk 24.576MHz
-//	 *
-//	 * CLKA 3.072 MHz
-//	 * FSA	48 kHz
-//	 */
-
-
 	/* Init PCG A
 	 *
 	 * Using ext clk 24.576MHz
@@ -523,23 +514,18 @@ uint32_t PcgInit(void)
 		return 1u;
 	}
 
-//    /* Clock A 3.076 MHz */
-//	if((uint32_t)adi_pcg_ClockDivide(phPcgA, 0x8) != 0u)
 	/* Clock A 12.288 MHz */
 	if((uint32_t)adi_pcg_ClockDivide(phPcgA, 0x2) != 0u)
 	{
 		/* return error */
 		return 1u;
 	}
-//    /* FS A 48 kHz */
-//	if((uint32_t)adi_pcg_FrameSyncDivide(phPcgA, 0x200) != 0u)
     /* FS A 192 kHz */
 	if((uint32_t)adi_pcg_FrameSyncDivide(phPcgA, 0x80) != 0u)
 	{
 		/* return error */
 		return 1u;
 	}
-
 
 	return Result;
 }
