@@ -231,8 +231,9 @@ int main()
 
     if(Result == 0u)
     {
+    	bool run = true;
         /* Audio loopback */
-        while(1)
+        while(run)
         {
             /* Process audio buffers */
             Result = ProcessBuffers();
@@ -252,30 +253,47 @@ int main()
                 break;
             }
 
-            /* Callback count limit reached */
-            if (DacCount >CALLBACK_COUNT)
-            {
-
-				/* Disable and close SPDIF */
-				adi_spdif_Rx_Enable(phRxSpdif, false);
-				adi_spdif_Rx_Close(phRxSpdif);
-
-                /* Disable and close DAC */
-                adi_adau1962a_Enable(phAdau1962a, false);
-                adi_adau1962a_Close(phAdau1962a);
-
-                /* Disable and close ASRC */
-                adi_asrc_Enable(phAsrc0, false);
-                adi_asrc_Close(phAsrc0);
-
-				/* Disable and close PCG */
-				adi_pcg_Enable    (phPcgA, false);
-				adi_pcg_Close     (phPcgA);
-
-                /* while loop break */
-                break;
-            }
+//            /* Callback count limit reached */
+//            if (DacCount >CALLBACK_COUNT)
+//            {
+//
+//				/* Disable and close SPDIF */
+//				adi_spdif_Rx_Enable(phRxSpdif, false);
+//				adi_spdif_Rx_Close(phRxSpdif);
+//
+//                /* Disable and close DAC */
+//                adi_adau1962a_Enable(phAdau1962a, false);
+//                adi_adau1962a_Close(phAdau1962a);
+//
+//                /* Disable and close ASRC */
+//                adi_asrc_Enable(phAsrc0, false);
+//                adi_asrc_Close(phAsrc0);
+//
+//				/* Disable and close PCG */
+//				adi_pcg_Enable    (phPcgA, false);
+//				adi_pcg_Close     (phPcgA);
+//
+//                /* while loop break */
+//                break;
+//            }
         }
+
+        // close devices
+		adi_spdif_Rx_Enable(phRxSpdif, false);
+		adi_spdif_Rx_Close(phRxSpdif);
+
+        /* Disable and close DAC */
+        adi_adau1962a_Enable(phAdau1962a, false);
+        adi_adau1962a_Close(phAdau1962a);
+
+        /* Disable and close ASRC */
+        adi_asrc_Enable(phAsrc0, false);
+        adi_asrc_Close(phAsrc0);
+
+		/* Disable and close PCG */
+		adi_pcg_Enable    (phPcgA, false);
+		adi_pcg_Close     (phPcgA);
+
     }
 
     if (Result == 0u)
