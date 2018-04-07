@@ -24,7 +24,6 @@ to the terms of the associated Analog Devices License Agreement.
 
 #include <sys/platform.h>
 /* SPU Manager includes */
-#include <services/gpio/adi_gpio.h>
 #include <drivers/spdif/adi_spdif_rx.h>
 #include <drivers/dac/adau1962a/adi_adau1962a.h>
 #include <drivers/asrc/adi_asrc.h>
@@ -36,6 +35,7 @@ to the terms of the associated Analog Devices License Agreement.
 #include "PowerService.h"
 #include "SystemProtectionService.h"
 #include "PrecisionClockGenerator.h"
+#include "GeneralPurposeIO.h"
 
 #include <SRU.h>
 
@@ -45,9 +45,7 @@ to the terms of the associated Analog Devices License Agreement.
 
 /* Twi  */
 static uint8_t TwiMemory[ADI_TWI_MEMORY_SIZE];
-/* Gpio */
-static uint8_t GpioMemory[ADI_GPIO_CALLBACK_MEM_SIZE];
-static uint32_t gpioMaxCallbacks;
+
 
 /* RxSpdif  */
 static uint8_t RxSpdifMemory[1000u];
@@ -94,8 +92,6 @@ static int8_t DacBuf[AUDIO_BUFFER_SIZE * 2];
 
 /* Initialize ASRC on the side of Rx Spdif */
 uint32_t    AsrcInit(void);
-/* Initialize GPIO and reset peripherals */
-uint32_t    GpioInit(void);
 /* Initialize Rx Spdif peripherals */
 uint32_t	SpdifInit(void);
 /* Initializes DAC */
@@ -142,10 +138,8 @@ int main()
     PrecisionClockGenerator pcg;
 
     /* Initialize GPIO for ADC/DAC reset control */
-    if(Result == 0u)
-    {
-        Result = GpioInit();
-    }
+    GeneralPurposeIO gpio;
+
 
 	/* Initialize SPDIF */
 	if(Result == 0u)
@@ -302,49 +296,6 @@ uint32_t AsrcInit(void)
 }
 
 
-/*
- * Initializes GPIO service
- * A GPIO line is used to control reset of the ADC and DAC devices
- */
-uint32_t GpioInit(void)
-{
-    uint32_t Result = 0u;
-    /* Loop variable */
-    volatile uint32_t i;
-
-    if((uint32_t)adi_gpio_Init((void*)GpioMemory, ADI_GPIO_CALLBACK_MEM_SIZE, &gpioMaxCallbacks) != 0u)
-    {
-        /* return error */
-        return 1u;
-    }
-
-    if((uint32_t)adi_gpio_SetDirection(ADI_GPIO_PORT_A, ADI_GPIO_PIN_6, ADI_GPIO_DIRECTION_OUTPUT) != 0u)
-    {
-        /* return error */
-        return 1u;
-    }
-    /* bring reset low */
-    if((uint32_t)adi_gpio_Clear(ADI_GPIO_PORT_A, ADI_GPIO_PIN_6) != 0u)
-    {
-        /* return error */
-        return 1u;
-    }
-
-    /* delay */
-    for (i = DELAY_COUNT; i ; i --);
-
-    /* bring reset high */
-    if((uint32_t)adi_gpio_Set(ADI_GPIO_PORT_A, ADI_GPIO_PIN_6) != 0u)
-    {
-        /* return error */
-        return 1u;
-    }
-
-    /* delay */
-    for (i = DELAY_COUNT; i ; i --);
-
-    return Result;
-}
 
 /*
  * Opens and initializes Tx and Rx SPDIF Device.
