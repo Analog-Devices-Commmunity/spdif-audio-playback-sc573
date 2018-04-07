@@ -39,26 +39,6 @@ to the terms of the associated Analog Devices License Agreement.
 
 #include <SRU.h>
 
-#if !defined(ADI_CACHE_LINE_LENGTH)
-/* The ADI_CACHE_* macros were introduced in CCES 2.4.0 in <sys/platform.h>.
- * If using an older toolchain, define them here.
- */
- #if defined(__ADSPARM__)
-  #define ADI_CACHE_LINE_LENGTH (32uL)
-  #define ADI_CACHE_ALIGN __attribute__((aligned(ADI_CACHE_LINE_LENGTH)))
- #elif defined(__ADSP215xx__)
-  #define ADI_CACHE_LINE_LENGTH (64uL)
-  #define ADI_CACHE_ALIGN _Pragma("align 64")
- #else
-  #error Unknown ADI_CACHE_LINE_LENGTH
- #endif
- #define ADI_CACHE_ROUND_UP_SIZE(size, type) \
-    (((((((size) * sizeof(type)) \
-           + (ADI_CACHE_LINE_LENGTH - 1uL)) \
-          / ADI_CACHE_LINE_LENGTH) * ADI_CACHE_LINE_LENGTH) \
-      + (sizeof(type) - 1uL)) / sizeof(type))
-#endif
-
 /*==============  D E F I N E S  ===============*/
 
 /*=============  D A T A  =============*/
@@ -323,33 +303,33 @@ uint32_t PowerServiceInit(void)
 * Refer to CrossCore® Embedded Studio 2.6.0 Release notes for more information.
 * Add "CLOCK_SPEED_500MHZ" to preprocessor definitions of this example project in case CCLK is configured as 500 MHz.*/
 
-#if defined(CLOCK_SPEED_500MHZ) && defined(__ADSPSC589_FAMILY__)
-	/* For CCLK=500MHz, CGU1 is used to generate the OCLK_1 of 225MHz. */
-
-	/* Initialize the power service to CLKIN=25MHz. This API is called so that we can use other low level APIs to
-	 * modify individual clocks. adi_pwr_SetFreq() is not called.*/
-	if((uint32_t)adi_pwr_Init(CGU_DEV_1, CLKIN) != 0u)
-			{
-				/* return error */
-				return 1u;
-			}
-
-	/* For S/PDIF sampling frequencies (24 - 96kHz),Configure CLK05 to between 170 MHz to 180 MHz.
-	 * For S/PDIF sampling frequencies (32 -192kHz),Configure CLK05 to 225 MHz.*/
-
-	/* Use OCLK_1 to get S/PDIF-Rx (CDU_CLKO5) freq of 225MHz. */
-	if((uint32_t)adi_pwr_SetClkDivideRegister(CGU_DEV_1, ADI_PWR_CLK_DIV_OSEL, 2) != 0u)
-		{
-			/* return error */
-			return 1u;
-		}
-	/* Use OCLK_1 to get S/PDIF-Rx (CDU_CLKO5) freq of 225MHz. */
-	if((uint32_t)adi_pwr_ConfigCduInputClock(ADI_PWR_CDU_CLKIN_1, ADI_PWR_CDU_CLKOUT_5) != 0u)
-	{
-		/* return error */
-		return 1u;
-	}
-#else
+//#if defined(CLOCK_SPEED_500MHZ) && defined(__ADSPSC589_FAMILY__)
+//	/* For CCLK=500MHz, CGU1 is used to generate the OCLK_1 of 225MHz. */
+//
+//	/* Initialize the power service to CLKIN=25MHz. This API is called so that we can use other low level APIs to
+//	 * modify individual clocks. adi_pwr_SetFreq() is not called.*/
+//	if((uint32_t)adi_pwr_Init(CGU_DEV_1, CLKIN) != 0u)
+//			{
+//				/* return error */
+//				return 1u;
+//			}
+//
+//	/* For S/PDIF sampling frequencies (24 - 96kHz),Configure CLK05 to between 170 MHz to 180 MHz.
+//	 * For S/PDIF sampling frequencies (32 -192kHz),Configure CLK05 to 225 MHz.*/
+//
+//	/* Use OCLK_1 to get S/PDIF-Rx (CDU_CLKO5) freq of 225MHz. */
+//	if((uint32_t)adi_pwr_SetClkDivideRegister(CGU_DEV_1, ADI_PWR_CLK_DIV_OSEL, 2) != 0u)
+//		{
+//			/* return error */
+//			return 1u;
+//		}
+//	/* Use OCLK_1 to get S/PDIF-Rx (CDU_CLKO5) freq of 225MHz. */
+//	if((uint32_t)adi_pwr_ConfigCduInputClock(ADI_PWR_CDU_CLKIN_1, ADI_PWR_CDU_CLKOUT_5) != 0u)
+//	{
+//		/* return error */
+//		return 1u;
+//	}
+//#else
 	/* For CCLK=450MHz, CGU0 is used to generate the OCLK_0 of 225MHz. */
 
 	/* Initialize the power service to CLKIN=25MHz. This API is called so that we can use other low level APIs to
@@ -375,7 +355,7 @@ uint32_t PowerServiceInit(void)
 		/* return error */
 		return 1u;
 	}
-#endif
+//#endif
 
     return Result;
 }
@@ -391,35 +371,35 @@ uint32_t SpuInit(void)
         return (ADI_SPU_FAILURE);
     }
 
-#if defined(__ADSPBF707_FAMILY__) || defined(__ADSPSC589_FAMILY__)
-    /* Make SPORT 0A to generate secure transactions */
-    if(adi_spu_EnableMasterSecure(hSpu, SPORT_0A_SPU_PID, true) != ADI_SPU_SUCCESS)
-    {
-        DBG_MSG("Failed to enable Master secure for SPORT 0A\n");
-        return (ADI_SPU_FAILURE);
-    }
-
-    /* Make SPORT 4B to generate secure transactions */
-    if(adi_spu_EnableMasterSecure(hSpu, SPORT_4B_SPU_PID, true) != ADI_SPU_SUCCESS)
-    {
-        DBG_MSG("Failed to enable Master secure for SPORT 4B\n");
-        return (ADI_SPU_FAILURE);
-    }
-
-    /* Make SPORT 0A DMA to generate secure transactions */
-    if(adi_spu_EnableMasterSecure(hSpu, SPORT_0A_DMA10_SPU_PID, true) != ADI_SPU_SUCCESS)
-    {
-        DBG_MSG("Failed to enable Master secure for SPORT 0A DMA\n");
-        return (ADI_SPU_FAILURE);
-    }
-
-    /* Make SPORT 4B DMA to generate secure transactions */
-    if(adi_spu_EnableMasterSecure(hSpu, SPORT_4B_DMA11_SPU_PID, true) != ADI_SPU_SUCCESS)
-    {
-        DBG_MSG("Failed to enable Master secure for SPORT 4B DMA\n");
-        return (ADI_SPU_FAILURE);
-    }
-#elif defined(__ADSPSC573_FAMILY__)
+//#if defined(__ADSPBF707_FAMILY__) || defined(__ADSPSC589_FAMILY__)
+//    /* Make SPORT 0A to generate secure transactions */
+//    if(adi_spu_EnableMasterSecure(hSpu, SPORT_0A_SPU_PID, true) != ADI_SPU_SUCCESS)
+//    {
+//        DBG_MSG("Failed to enable Master secure for SPORT 0A\n");
+//        return (ADI_SPU_FAILURE);
+//    }
+//
+//    /* Make SPORT 4B to generate secure transactions */
+//    if(adi_spu_EnableMasterSecure(hSpu, SPORT_4B_SPU_PID, true) != ADI_SPU_SUCCESS)
+//    {
+//        DBG_MSG("Failed to enable Master secure for SPORT 4B\n");
+//        return (ADI_SPU_FAILURE);
+//    }
+//
+//    /* Make SPORT 0A DMA to generate secure transactions */
+//    if(adi_spu_EnableMasterSecure(hSpu, SPORT_0A_DMA10_SPU_PID, true) != ADI_SPU_SUCCESS)
+//    {
+//        DBG_MSG("Failed to enable Master secure for SPORT 0A DMA\n");
+//        return (ADI_SPU_FAILURE);
+//    }
+//
+//    /* Make SPORT 4B DMA to generate secure transactions */
+//    if(adi_spu_EnableMasterSecure(hSpu, SPORT_4B_DMA11_SPU_PID, true) != ADI_SPU_SUCCESS)
+//    {
+//        DBG_MSG("Failed to enable Master secure for SPORT 4B DMA\n");
+//        return (ADI_SPU_FAILURE);
+//    }
+//#elif defined(__ADSPSC573_FAMILY__)
     /* Make SPORT 0A to generate secure transactions */
     if(adi_spu_EnableMasterSecure(hSpu, SPORT_0A_SPU_PID, true) != ADI_SPU_SUCCESS)
     {
@@ -447,7 +427,7 @@ uint32_t SpuInit(void)
         DBG_MSG("Failed to enable Master secure for SPORT 2B DMA\n");
         return (ADI_SPU_FAILURE);
     }
-#endif
+//#endif
 
     return (Result);
 }
@@ -522,29 +502,29 @@ uint32_t GpioInit(void)
         return 1u;
     }
 
-#if defined(__ADSPBF707_FAMILY__) || defined(__ADSPSC589_FAMILY__)
-    if((uint32_t)adi_gpio_SetDirection(ADI_GPIO_PORT_A, ADI_GPIO_PIN_14, ADI_GPIO_DIRECTION_OUTPUT) != 0u)
-    {
-        /* return error */
-        return 1u;
-    }
-    /* bring reset low */
-    if((uint32_t)adi_gpio_Clear(ADI_GPIO_PORT_A, ADI_GPIO_PIN_14) != 0u)
-    {
-        /* return error */
-        return 1u;
-    }
-
-    /* delay */
-    for (i = DELAY_COUNT; i ; i --);
-
-    /* bring reset high */
-    if((uint32_t)adi_gpio_Set(ADI_GPIO_PORT_A, ADI_GPIO_PIN_14) != 0u)
-    {
-        /* return error */
-        return 1u;
-    }
-#elif defined(__ADSPSC573_FAMILY__)
+//#if defined(__ADSPBF707_FAMILY__) || defined(__ADSPSC589_FAMILY__)
+//    if((uint32_t)adi_gpio_SetDirection(ADI_GPIO_PORT_A, ADI_GPIO_PIN_14, ADI_GPIO_DIRECTION_OUTPUT) != 0u)
+//    {
+//        /* return error */
+//        return 1u;
+//    }
+//    /* bring reset low */
+//    if((uint32_t)adi_gpio_Clear(ADI_GPIO_PORT_A, ADI_GPIO_PIN_14) != 0u)
+//    {
+//        /* return error */
+//        return 1u;
+//    }
+//
+//    /* delay */
+//    for (i = DELAY_COUNT; i ; i --);
+//
+//    /* bring reset high */
+//    if((uint32_t)adi_gpio_Set(ADI_GPIO_PORT_A, ADI_GPIO_PIN_14) != 0u)
+//    {
+//        /* return error */
+//        return 1u;
+//    }
+//#elif defined(__ADSPSC573_FAMILY__)
     if((uint32_t)adi_gpio_SetDirection(ADI_GPIO_PORT_A, ADI_GPIO_PIN_6, ADI_GPIO_DIRECTION_OUTPUT) != 0u)
     {
         /* return error */
@@ -566,7 +546,7 @@ uint32_t GpioInit(void)
         /* return error */
         return 1u;
     }
-#endif
+//#endif
 
     /* delay */
     for (i = DELAY_COUNT; i ; i --);
@@ -716,11 +696,11 @@ uint32_t Adau1962aInit(void)
     }
 
     /* SPORT parameters required to open/configure SPORT */
-#if defined(__ADSPBF707_FAMILY__) || defined(__ADSPSC589_FAMILY__)
-    SportConfig.SportDevNum     = 4u;
-#elif defined(__ADSPSC573_FAMILY__)
+//#if defined(__ADSPBF707_FAMILY__) || defined(__ADSPSC589_FAMILY__)
+//    SportConfig.SportDevNum     = 4u;
+//#elif defined(__ADSPSC573_FAMILY__)
     SportConfig.SportDevNum     = 2u;
-#endif
+//#endif
     SportConfig.eSportChnl      = ADI_ADAU1962A_SPORT_B;
     SportConfig.eSportPri       = ADI_ADAU1962A_SERIAL_PORT_DSDATA1;
     SportConfig.eSportSec       = ADI_ADAU1962A_SERIAL_PORT_NONE;

@@ -64,19 +64,19 @@ to the terms of the associated Analog Devices License Agreement.
 #define AUDIO_BUFFER_SIZE 	        (SAMPLES_PER_PERIOD * NUM_CHANNELS * SAMPLE_SIZE * 4u)
 
 /* SPU Peripheral ID */
-#if defined(__ADSPBF707_FAMILY__) || defined(__ADSPSC589_FAMILY__)
-#define	SPORT_0A_SPU_PID		    (15u)
-#define	SPORT_4B_SPU_PID		    (24u)
-#define	SPORT_0A_DMA10_SPU_PID		(66u)
-#define	SPORT_4B_DMA11_SPU_PID		(75u)
-#elif defined(__ADSPSC573_FAMILY__)
+//#if defined(__ADSPBF707_FAMILY__) || defined(__ADSPSC589_FAMILY__)
+//#define	SPORT_0A_SPU_PID		    (15u)
+//#define	SPORT_4B_SPU_PID		    (24u)
+//#define	SPORT_0A_DMA10_SPU_PID		(66u)
+//#define	SPORT_4B_DMA11_SPU_PID		(75u)
+//#elif defined(__ADSPSC573_FAMILY__)
 #define	SPORT_0A_SPU_PID		    (ADI_SPU0_SPORT0A_ID)
 #define	SPORT_2B_SPU_PID		    (ADI_SPU0_SPORT2B_ID)
 #define	SPORT_0A_DMA10_SPU_PID		(ADI_SPU0_DMA0_ID)
 #define	SPORT_2B_DMA11_SPU_PID		(ADI_SPU0_DMA5_ID)
-#else
-#error "processor is not supported"
-#endif
+//#else
+//#error "processor is not supported"
+//#endif
 
 #define PIN_MASK (0x0000007Fu)
 #define PIN_LEN  (7u)
