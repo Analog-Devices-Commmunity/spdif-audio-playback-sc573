@@ -21,7 +21,6 @@ public:
 	void Disable();
 	void Close();
 	static void CheckSpdifResult(ADI_SPDIF_RX_RESULT expected, ADI_SPDIF_RX_RESULT result);
-
 };
 
 #endif /* SPDIFDEVICE_H_ */

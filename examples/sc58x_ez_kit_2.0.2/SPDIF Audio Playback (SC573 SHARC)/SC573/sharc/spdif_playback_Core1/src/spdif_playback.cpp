@@ -25,7 +25,6 @@ to the terms of the associated Analog Devices License Agreement.
 #include <sys/platform.h>
 /* SPU Manager includes */
 #include <drivers/dac/adau1962a/adi_adau1962a.h>
-//#include <drivers/asrc/adi_asrc.h>
 #include <stdio.h>
 #include <string.h>
 #include <math.h>
@@ -37,6 +36,7 @@ to the terms of the associated Analog Devices License Agreement.
 #include "GeneralPurposeIO.h"
 #include "SpdifDevice.h"
 #include "AsynchronousRateConverter.h"
+#include "Adau1962Dac.h"
 #include <SRU.h>
 
 /*==============  D E F I N E S  ===============*/
@@ -48,18 +48,10 @@ static uint8_t TwiMemory[ADI_TWI_MEMORY_SIZE];
 
 
 /* ADAU1962A DAC DATA */
-static ADI_ADAU1962A_HANDLE phAdau1962a;
-static uint8_t Adau1962aMemory[ADI_ADAU1962A_MEMORY_SIZE];
-/* ADAU1962A Sport */
-static uint8_t Adau1962aSportMemory[ADI_SPORT_DMA_MEMORY_SIZE];
-
-///* Asrc */
-//static uint8_t AsrcMemory0[ADI_ASRC_MEMORY_SIZE];
-//static ADI_ASRC_HANDLE phAsrc0;
-//
-///* ASRC SPORT configuration */
-//static uint8_t OpAsrcSportMemory[ADI_SPORT_DMA_MEMORY_SIZE];
-//static ADI_ASRC_SPORT_CONFIG OpAsrcSportConfig;
+//static ADI_ADAU1962A_HANDLE phAdau1962a;
+//static uint8_t Adau1962aMemory[ADI_ADAU1962A_MEMORY_SIZE];
+///* ADAU1962A Sport */
+//static uint8_t Adau1962aSportMemory[ADI_SPORT_DMA_MEMORY_SIZE];
 
 /* Counter to keep track of number of ADC buffers processed */
 static volatile uint32_t AsrcCount = 0u;
@@ -86,10 +78,8 @@ static int8_t DacBuf[AUDIO_BUFFER_SIZE * 2];
 
 /*=============  L O C A L    F U N C T I O N    P R O T O T Y P E S =============*/
 
-///* Initialize ASRC on the side of Rx Spdif */
-//uint32_t    AsrcInit(void);
 /* Initializes DAC */
-uint32_t    Adau1962aInit(void);
+//uint32_t    Adau1962aInit(void);
 /* Submit buffers to ASRC */
 uint32_t    AsrcSubmitBuffers(void);
 /* Submit buffers to DAC */
@@ -137,18 +127,16 @@ int main()
 	/* Initialize SPDIF */
     SpdifDevice spdif;
 
-    AsynchronousRateConverter asrc(AsrcCallback);
     /* Initialize Asynchronous Rate Converter for the DAC*/
-//    if(Result == 0u)
-//    {
-//        Result = AsrcInit();
-//    }
+    AsynchronousRateConverter asrc(AsrcCallback);
+
 
     /* Initialize ADAU1962A */
-    if(Result == 0u)
-    {
-        Result = Adau1962aInit();
-    }
+    Adau1962Dac dac(&TwiMemory, DacCallback);
+//    if(Result == 0u)
+//    {
+//        Result = Adau1962aInit();
+//    }
 
     /* Submit ASRC buffers */
     if(Result == 0u)
@@ -164,10 +152,6 @@ int main()
 
     /* Enable the ASRC */
     asrc.Enable();
-//    if(Result == 0u)
-//    {
-//        Result = (uint32_t)adi_asrc_Enable(phAsrc0, true);
-//    }
 
 	/* Enable Rx SPDIF */
     spdif.Enable();
@@ -206,14 +190,14 @@ int main()
         spdif.Close();
 
         /* Disable and close DAC */
-        adi_adau1962a_Enable(phAdau1962a, false);
-        adi_adau1962a_Close(phAdau1962a);
+        dac.Disable();
+        dac.Close();
+//        adi_adau1962a_Enable(phAdau1962a, false);
+//        adi_adau1962a_Close(phAdau1962a);
 
         /* Disable and close ASRC */
         asrc.Disable();
         asrc.Close();
-//        adi_asrc_Enable(phAsrc0, false);
-//        adi_asrc_Close(phAsrc0);
 
 		/* Disable and close PCG */
         pcg.Disable();
@@ -232,60 +216,6 @@ int main()
     return 0;
 }
 
-///*
-// * Opens and initializes ASRC Device.
-// *
-// * Parameters
-// *  None
-// *
-// * Returns
-// *  0 if success, other values for error
-// *
-// */
-//uint32_t AsrcInit(void)
-//{
-//    uint32_t Result = 0u;
-//
-//    /* Open ASRC 0 */
-//    if( adi_asrc_Open(0u,
-//    				  0u,
-//                      &AsrcMemory0[0],
-//                      ADI_ASRC_MEMORY_SIZE,
-//                      &phAsrc0) != ADI_ASRC_SUCCESS)
-//    {
-//        Result = 1u;
-//    }
-//
-//    if( adi_asrc_SetSerialFormat(phAsrc0, ADI_ASRC_INPUT_I2S, ADI_ASRC_OUTPUT_I2S, ADI_ASRC_WORD_LENGTH_24) != ADI_ASRC_SUCCESS)
-//    {
-//        Result = 1u;
-//    }
-//
-//    /* configure SPORT, this will handle Asrc0 */
-//    OpAsrcSportConfig.SportDevNum		= 0u;
-//    OpAsrcSportConfig.pSportDevMem 	    = &OpAsrcSportMemory[0u];
-//    OpAsrcSportConfig.SportDevMemSize 	= ADI_SPORT_DMA_MEMORY_SIZE;
-//    OpAsrcSportConfig.bLsbFirst			= false;
-//    OpAsrcSportConfig.bPack   			= false;
-//    OpAsrcSportConfig.bSecondaryEnabled	= false;
-//    OpAsrcSportConfig.eSportChnl		= ADI_ASRC_SPORT_A;
-//
-//    /* Configure input ASRC sport channel */
-//    if( adi_asrc_OpConfigSport(phAsrc0, &OpAsrcSportConfig) != ADI_ASRC_SUCCESS)
-//    {
-//        Result = 1u;
-//    }
-//
-//    /* Register output Sport callback */
-//    if(adi_asrc_OpRegisterSportCallback(phAsrc0, AsrcCallback, NULL) != ADI_ASRC_SUCCESS)
-//    {
-//        Result = 1u;
-//    }
-//
-//    return Result;
-//}
-
-
 /*
  * Opens and initializes ADAU1962A DAC Device.
  *
@@ -296,137 +226,137 @@ int main()
  *  0 if success, other values for error
  *
  */
-uint32_t Adau1962aInit(void)
-{
-    ADI_ADAU1962A_RESULT        eResult;
-    ADI_ADAU1962A_TWI_CONFIG    TwiConfig;
-    ADI_ADAU1962A_SPORT_CONFIG  SportConfig;
-
-    /* Open ADAU1962A device instance */
-    if((eResult = adi_adau1962a_Open(0u,
-                                     ADI_ADAU1962A_SERIAL_MODE_STEREO,
-                                     &Adau1962aMemory,
-                                     ADI_ADAU1962A_MEMORY_SIZE,
-                                     &phAdau1962a)) != ADI_ADAU1962A_SUCCESS)
-    {
-        printf ("ADAU1962A: Failed to open ADAU1962A device instance, Error Code: 0x%08X\n", eResult);
-        /* return error */
-        return 1u;
-    }
-
-    /* TWI parameters required to open/configure TWI */
-    TwiConfig.TwiDevNum     = 0u;
-    TwiConfig.eTwiAddr      = ADI_ADAU1962A_TWI_ADDR_04;
-    TwiConfig.TwiDevMemSize = ADI_TWI_MEMORY_SIZE;
-    TwiConfig.pTwiDevMem    = &TwiMemory;
-
-    /* Configure TWI */
-    if ((eResult = adi_adau1962a_ConfigTwi (phAdau1962a, &TwiConfig)) != ADI_ADAU1962A_SUCCESS)
-    {
-        printf ("ADAU1962A: Failed to configure TWI, Error Code: 0x%08X\n", eResult);
-        /* return error */
-        return 1u;
-    }
-
-    /* SPORT parameters required to open/configure SPORT */
-    SportConfig.SportDevNum     = 2u;
-    SportConfig.eSportChnl      = ADI_ADAU1962A_SPORT_B;
-    SportConfig.eSportPri       = ADI_ADAU1962A_SERIAL_PORT_DSDATA1;
-    SportConfig.eSportSec       = ADI_ADAU1962A_SERIAL_PORT_NONE;
-    SportConfig.SportDevMemSize = ADI_SPORT_DMA_MEMORY_SIZE;
-    SportConfig.pSportDevMem    = &Adau1962aSportMemory;
-
-    /* Configure SPORT */
-    if ((eResult = adi_adau1962a_ConfigSport (phAdau1962a, &SportConfig)) != ADI_ADAU1962A_SUCCESS)
-    {
-        printf ("ADAU1962A: Failed to configure SPORT, Error Code: 0x%08X\n", eResult);
-        /* return error */
-        return 1u;
-    }
-
-    /* DAC Master Power-up */
-    if ((eResult = adi_adau1962a_ConfigDacPwr (phAdau1962a,
-                                               ADI_ADAU1962A_CHNL_DAC_MSTR,
-                                               ADI_ADAU1962A_DAC_PWR_LOW,
-                                               true)) != ADI_ADAU1962A_SUCCESS)
-    {
-        printf ("ADAU1962A: Failed to configure DAC power, Error Code: 0x%08X\n", eResult);
-        /* return error */
-        return 1u;
-    }
-
-    /*
-     * Configure PLL clock - DAC is clock master and drives SPORT clk and FS
-     * MCLK 24.576 MHz and PLL uses MCLK
-     */
-    if ((eResult = adi_adau1962a_ConfigPllClk (phAdau1962a,
-                                               ADAU1962A_MCLK_IN,
-                                               ADI_ADAU1962A_MCLK_SEL_PLL,
-                                               ADI_ADAU1962A_PLL_IN_MCLKI_XTALI)) != ADI_ADAU1962A_SUCCESS)
-    {
-        printf ("ADAU1962A: Failed to configure PLL clock, Error Code: 0x%08X\n", eResult);
-        /* return error */
-        return 1u;
-    }
-
-    /*
-     * Configure serial data clock
-     * DAC as clock master, External BCLK, Latch on raising edge
-     * LRCLK at 50% duty cycle, MSB first, Left channel at LRCLK low
-     */
-    if ((eResult = adi_adau1962a_ConfigSerialClk (phAdau1962a,
-                                                  LR_B_CLK_MASTER_1962,
-                                                  false,
-                                                  BCLK_RISING_1962,
-                                                  false,
-                                                  false,
-                                                  LRCLK_HI_LO_1962)) != ADI_ADAU1962A_SUCCESS)
-    {
-        printf ("ADAU1962A: Failed to configure serial data clock, Error Code: 0x%08X\n", eResult);
-        /* return error */
-        return 1u;
-    }
-
-    /* Power-up PLL */
-    if ((eResult = adi_adau1962a_ConfigBlockPwr (phAdau1962a,
-                                                 false,
-                                                 true,
-                                                 true)) != ADI_ADAU1962A_SUCCESS)
-    {
-        printf ("ADAU1962A: Failed to Power-up PLL, Error Code: 0x%08X\n", eResult);
-        /* return error */
-        return 1u;
-    }
-
-    /* Configure Sample rate */
-    if ((eResult = adi_adau1962a_SetSampleRate (phAdau1962a, SAMPLE_RATE * 1u)) != ADI_ADAU1962A_SUCCESS)
-    {
-        printf ("ADAU1962A: Failed to configure Sample rate, Error Code: 0x%08X\n", eResult);
-        /* return error */
-        return 1u;
-    }
-
-    /* Configure Word width */
-    if ((eResult = adi_adau1962a_SetWordWidth (phAdau1962a,
-                                               ADI_ADAU1962A_WORD_WIDTH_24)) != ADI_ADAU1962A_SUCCESS)
-    {
-        printf ("ADAU1962A: Failed to configure word width, Error Code: 0x%08X\n", eResult);
-        /* return error */
-        return 1u;
-    }
-
-    /* Register callback */
-    if ((eResult = adi_adau1962a_RegisterCallback (phAdau1962a,
-                                                   DacCallback,
-                                                   NULL)) != ADI_ADAU1962A_SUCCESS)
-    {
-        printf ("ADAU1962A: Failed to register callback, Error Code: 0x%08X\n", eResult);
-        /* return error */
-        return 1u;
-    }
-
-    return 0u;
-}
+//uint32_t Adau1962aInit(void)
+//{
+//    ADI_ADAU1962A_RESULT        eResult;
+//    ADI_ADAU1962A_TWI_CONFIG    TwiConfig;
+//    ADI_ADAU1962A_SPORT_CONFIG  SportConfig;
+//
+//    /* Open ADAU1962A device instance */
+//    if((eResult = adi_adau1962a_Open(0u,
+//                                     ADI_ADAU1962A_SERIAL_MODE_STEREO,
+//                                     &Adau1962aMemory,
+//                                     ADI_ADAU1962A_MEMORY_SIZE,
+//                                     &phAdau1962a)) != ADI_ADAU1962A_SUCCESS)
+//    {
+//        printf ("ADAU1962A: Failed to open ADAU1962A device instance, Error Code: 0x%08X\n", eResult);
+//        /* return error */
+//        return 1u;
+//    }
+//
+//    /* TWI parameters required to open/configure TWI */
+//    TwiConfig.TwiDevNum     = 0u;
+//    TwiConfig.eTwiAddr      = ADI_ADAU1962A_TWI_ADDR_04;
+//    TwiConfig.TwiDevMemSize = ADI_TWI_MEMORY_SIZE;
+//    TwiConfig.pTwiDevMem    = &TwiMemory;
+//
+//    /* Configure TWI */
+//    if ((eResult = adi_adau1962a_ConfigTwi (phAdau1962a, &TwiConfig)) != ADI_ADAU1962A_SUCCESS)
+//    {
+//        printf ("ADAU1962A: Failed to configure TWI, Error Code: 0x%08X\n", eResult);
+//        /* return error */
+//        return 1u;
+//    }
+//
+//    /* SPORT parameters required to open/configure SPORT */
+//    SportConfig.SportDevNum     = 2u;
+//    SportConfig.eSportChnl      = ADI_ADAU1962A_SPORT_B;
+//    SportConfig.eSportPri       = ADI_ADAU1962A_SERIAL_PORT_DSDATA1;
+//    SportConfig.eSportSec       = ADI_ADAU1962A_SERIAL_PORT_NONE;
+//    SportConfig.SportDevMemSize = ADI_SPORT_DMA_MEMORY_SIZE;
+//    SportConfig.pSportDevMem    = &Adau1962aSportMemory;
+//
+//    /* Configure SPORT */
+//    if ((eResult = adi_adau1962a_ConfigSport (phAdau1962a, &SportConfig)) != ADI_ADAU1962A_SUCCESS)
+//    {
+//        printf ("ADAU1962A: Failed to configure SPORT, Error Code: 0x%08X\n", eResult);
+//        /* return error */
+//        return 1u;
+//    }
+//
+//    /* DAC Master Power-up */
+//    if ((eResult = adi_adau1962a_ConfigDacPwr (phAdau1962a,
+//                                               ADI_ADAU1962A_CHNL_DAC_MSTR,
+//                                               ADI_ADAU1962A_DAC_PWR_LOW,
+//                                               true)) != ADI_ADAU1962A_SUCCESS)
+//    {
+//        printf ("ADAU1962A: Failed to configure DAC power, Error Code: 0x%08X\n", eResult);
+//        /* return error */
+//        return 1u;
+//    }
+//
+//    /*
+//     * Configure PLL clock - DAC is clock master and drives SPORT clk and FS
+//     * MCLK 24.576 MHz and PLL uses MCLK
+//     */
+//    if ((eResult = adi_adau1962a_ConfigPllClk (phAdau1962a,
+//                                               ADAU1962A_MCLK_IN,
+//                                               ADI_ADAU1962A_MCLK_SEL_PLL,
+//                                               ADI_ADAU1962A_PLL_IN_MCLKI_XTALI)) != ADI_ADAU1962A_SUCCESS)
+//    {
+//        printf ("ADAU1962A: Failed to configure PLL clock, Error Code: 0x%08X\n", eResult);
+//        /* return error */
+//        return 1u;
+//    }
+//
+//    /*
+//     * Configure serial data clock
+//     * DAC as clock master, External BCLK, Latch on raising edge
+//     * LRCLK at 50% duty cycle, MSB first, Left channel at LRCLK low
+//     */
+//    if ((eResult = adi_adau1962a_ConfigSerialClk (phAdau1962a,
+//                                                  LR_B_CLK_MASTER_1962,
+//                                                  false,
+//                                                  BCLK_RISING_1962,
+//                                                  false,
+//                                                  false,
+//                                                  LRCLK_HI_LO_1962)) != ADI_ADAU1962A_SUCCESS)
+//    {
+//        printf ("ADAU1962A: Failed to configure serial data clock, Error Code: 0x%08X\n", eResult);
+//        /* return error */
+//        return 1u;
+//    }
+//
+//    /* Power-up PLL */
+//    if ((eResult = adi_adau1962a_ConfigBlockPwr (phAdau1962a,
+//                                                 false,
+//                                                 true,
+//                                                 true)) != ADI_ADAU1962A_SUCCESS)
+//    {
+//        printf ("ADAU1962A: Failed to Power-up PLL, Error Code: 0x%08X\n", eResult);
+//        /* return error */
+//        return 1u;
+//    }
+//
+//    /* Configure Sample rate */
+//    if ((eResult = adi_adau1962a_SetSampleRate (phAdau1962a, SAMPLE_RATE * 1u)) != ADI_ADAU1962A_SUCCESS)
+//    {
+//        printf ("ADAU1962A: Failed to configure Sample rate, Error Code: 0x%08X\n", eResult);
+//        /* return error */
+//        return 1u;
+//    }
+//
+//    /* Configure Word width */
+//    if ((eResult = adi_adau1962a_SetWordWidth (phAdau1962a,
+//                                               ADI_ADAU1962A_WORD_WIDTH_24)) != ADI_ADAU1962A_SUCCESS)
+//    {
+//        printf ("ADAU1962A: Failed to configure word width, Error Code: 0x%08X\n", eResult);
+//        /* return error */
+//        return 1u;
+//    }
+//
+//    /* Register callback */
+//    if ((eResult = adi_adau1962a_RegisterCallback (phAdau1962a,
+//                                                   DacCallback,
+//                                                   NULL)) != ADI_ADAU1962A_SUCCESS)
+//    {
+//        printf ("ADAU1962A: Failed to register callback, Error Code: 0x%08X\n", eResult);
+//        /* return error */
+//        return 1u;
+//    }
+//
+//    return 0u;
+//}
 
 /*
  * Submits ping-pong buffers
@@ -474,14 +404,14 @@ uint32_t Adau1962aSubmitBuffers(void)
     uint32_t Result = 0u;
 
     /* submit ping buffer */
-    if((uint32_t)adi_adau1962a_SubmitBuffer(phAdau1962a, &DacBuf[AUDIO_BUFFER_SIZE * 0u], AUDIO_BUFFER_SIZE) != 0u)
+    if((uint32_t)adi_adau1962a_SubmitBuffer(Adau1962Dac::phAdau1962a, &DacBuf[AUDIO_BUFFER_SIZE * 0u], AUDIO_BUFFER_SIZE) != 0u)
     {
         /* return error */
         return 1u;
     }
 
     /* submit pong buffer */
-    if((uint32_t)adi_adau1962a_SubmitBuffer(phAdau1962a, &DacBuf[AUDIO_BUFFER_SIZE * 1u], AUDIO_BUFFER_SIZE) != 0u)
+    if((uint32_t)adi_adau1962a_SubmitBuffer(Adau1962Dac::phAdau1962a, &DacBuf[AUDIO_BUFFER_SIZE * 1u], AUDIO_BUFFER_SIZE) != 0u)
     {
         /* return error */
         return 1u;
@@ -517,7 +447,8 @@ uint32_t ProcessBuffers(void)
         if(AsrcCount == 2)
         {
             /* enable data flow */
-            if((uint32_t)adi_adau1962a_Enable(phAdau1962a, true) != 0u)
+        	// TODO
+            if((uint32_t)adi_adau1962a_Enable(Adau1962Dac::phAdau1962a, true) != 0u)
             {
                 /* return error */
                 return 1u;
@@ -541,7 +472,7 @@ uint32_t ProcessBuffers(void)
         pDAC = (void *)pGetDAC;
 
         /* submit the DAC buffer */
-        eResult2 = adi_adau1962a_SubmitBuffer(phAdau1962a, (void *) pDAC, AUDIO_BUFFER_SIZE);
+        eResult2 = adi_adau1962a_SubmitBuffer(Adau1962Dac::phAdau1962a, (void *) pDAC, AUDIO_BUFFER_SIZE);
 
         pGetDAC = NULL;
     }
