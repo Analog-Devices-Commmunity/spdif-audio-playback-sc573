@@ -17,8 +17,33 @@ ADI_ASRC_HANDLE AsynchronousRateConverter::phAsrc0;
 uint8_t AsynchronousRateConverter::OpAsrcSportMemory[ADI_SPORT_DMA_MEMORY_SIZE];
 ADI_ASRC_SPORT_CONFIG AsynchronousRateConverter::OpAsrcSportConfig;
 
+/*
+ * ADC Callback.
+ *
+ * Parameters
+ *  None
+ *
+ * Returns
+ *  None
+ *
+ */
+void AsrcCallback(void *pCBParam, uint32_t nEvent, void *pArg)
+{
+    switch(nEvent)
+    {
+        case ADI_SPORT_EVENT_RX_BUFFER_PROCESSED:
+            /* Update callback count */
+            SpdifPlayback::AsrcCount++;
+            /* store pointer to the processed buffer that caused the callback */
+            SpdifPlayback::pGetASRC = pArg;
+            break;
+        default:
+            SpdifPlayback::bEventError = true;
+            break;
+    }
+}
 
-AsynchronousRateConverter::AsynchronousRateConverter(ADI_CALLBACK callback) {
+AsynchronousRateConverter::AsynchronousRateConverter() {
     /* Open ASRC 0 */
 	ADI_ASRC_RESULT result = adi_asrc_Open(0u,
     				  0u,
@@ -44,7 +69,7 @@ AsynchronousRateConverter::AsynchronousRateConverter(ADI_CALLBACK callback) {
 	CheckAsrcResult(ADI_ASRC_SUCCESS, result);
 
     /* Register output Sport callback */
-    result = adi_asrc_OpRegisterSportCallback(phAsrc0, callback, NULL);
+    result = adi_asrc_OpRegisterSportCallback(phAsrc0, AsrcCallback, NULL);
 	CheckAsrcResult(ADI_ASRC_SUCCESS, result);
 }
 

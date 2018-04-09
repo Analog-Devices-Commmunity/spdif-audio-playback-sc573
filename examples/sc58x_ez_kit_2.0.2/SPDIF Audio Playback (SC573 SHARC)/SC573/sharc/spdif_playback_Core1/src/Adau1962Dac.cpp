@@ -20,7 +20,33 @@ uint8_t Adau1962Dac::Adau1962aSportMemory[ADI_SPORT_DMA_MEMORY_SIZE];
 ADI_ADAU1962A_HANDLE Adau1962Dac::phAdau1962a;
 uint8_t Adau1962Dac::TwiMemory[ADI_TWI_MEMORY_SIZE];
 
-Adau1962Dac::Adau1962Dac(ADI_CALLBACK pfCallback) {
+/*
+ * DAC Callback.
+ *
+ * Parameters
+ *  None
+ *
+ * Returns
+ *  None
+ *
+ */
+void DacCallback(void *pCBParam, uint32_t nEvent, void *pArg)
+{
+    switch(nEvent)
+    {
+        case ADI_SPORT_EVENT_TX_BUFFER_PROCESSED:
+            /* Update callback count */
+            SpdifPlayback::DacCount++;
+            /* store pointer to the processed buffer that caused the callback */
+            SpdifPlayback::pGetDAC = pArg;
+            break;
+        default:
+            SpdifPlayback::bEventError = true;
+            break;
+    }
+}
+
+Adau1962Dac::Adau1962Dac() {
     ADI_ADAU1962A_RESULT        eResult;
     ADI_ADAU1962A_TWI_CONFIG    TwiConfig;
     ADI_ADAU1962A_SPORT_CONFIG  SportConfig;
@@ -103,7 +129,7 @@ Adau1962Dac::Adau1962Dac(ADI_CALLBACK pfCallback) {
 
     /* Register callback */
     result = adi_adau1962a_RegisterCallback (phAdau1962a,
-    												pfCallback,
+    											DacCallback,
                                                    NULL);
     CheckAdau1962aResult(ADI_ADAU1962A_SUCCESS, result);
 }

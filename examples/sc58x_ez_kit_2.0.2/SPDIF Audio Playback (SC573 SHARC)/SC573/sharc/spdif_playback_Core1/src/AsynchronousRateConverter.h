@@ -17,7 +17,7 @@ private:
 	static uint8_t OpAsrcSportMemory[ADI_SPORT_DMA_MEMORY_SIZE];
 	static ADI_ASRC_SPORT_CONFIG OpAsrcSportConfig;
 public:
-	AsynchronousRateConverter(ADI_CALLBACK callback);
+	AsynchronousRateConverter();
 	virtual ~AsynchronousRateConverter();
 	void AsrcSubmitBuffers(void);
 	void Enable();

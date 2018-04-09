@@ -21,7 +21,7 @@ private:
 public:
 	static ADI_ADAU1962A_HANDLE phAdau1962a;
 
-	Adau1962Dac(ADI_CALLBACK pfCallback);
+	Adau1962Dac();
 	virtual ~Adau1962Dac();
 	void Adau1962aSubmitBuffers(void);
 	void Enable();
