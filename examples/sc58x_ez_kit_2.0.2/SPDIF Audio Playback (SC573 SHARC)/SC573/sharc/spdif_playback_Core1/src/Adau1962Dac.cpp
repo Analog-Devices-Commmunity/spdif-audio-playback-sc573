@@ -17,8 +17,9 @@ uint8_t Adau1962Dac::Adau1962aMemory[ADI_ADAU1962A_MEMORY_SIZE];
 uint8_t Adau1962Dac::Adau1962aSportMemory[ADI_SPORT_DMA_MEMORY_SIZE];
 
 ADI_ADAU1962A_HANDLE Adau1962Dac::phAdau1962a;
+uint8_t Adau1962Dac::TwiMemory[ADI_TWI_MEMORY_SIZE];
 
-Adau1962Dac::Adau1962Dac(void *pTwiDevMem, ADI_CALLBACK pfCallback) {
+Adau1962Dac::Adau1962Dac(ADI_CALLBACK pfCallback) {
     ADI_ADAU1962A_RESULT        eResult;
     ADI_ADAU1962A_TWI_CONFIG    TwiConfig;
     ADI_ADAU1962A_SPORT_CONFIG  SportConfig;
@@ -35,7 +36,7 @@ Adau1962Dac::Adau1962Dac(void *pTwiDevMem, ADI_CALLBACK pfCallback) {
     TwiConfig.TwiDevNum     = 0u;
     TwiConfig.eTwiAddr      = ADI_ADAU1962A_TWI_ADDR_04;
     TwiConfig.TwiDevMemSize = ADI_TWI_MEMORY_SIZE;
-    TwiConfig.pTwiDevMem    = pTwiDevMem;
+    TwiConfig.pTwiDevMem    = &TwiMemory;
 
     /* Configure TWI */
     result = adi_adau1962a_ConfigTwi (phAdau1962a, &TwiConfig);

@@ -16,10 +16,12 @@ private:
 	static uint8_t Adau1962aMemory[ADI_ADAU1962A_MEMORY_SIZE];
 	/* ADAU1962A Sport */
 	static uint8_t Adau1962aSportMemory[ADI_SPORT_DMA_MEMORY_SIZE];
+	/* Twi  */
+	static uint8_t TwiMemory[ADI_TWI_MEMORY_SIZE];
 public:
 	static ADI_ADAU1962A_HANDLE phAdau1962a;
 
-	Adau1962Dac(void *pTwiDevMem, ADI_CALLBACK pfCallback);
+	Adau1962Dac(ADI_CALLBACK pfCallback);
 	virtual ~Adau1962Dac();
 	void Enable();
 	void Disable();

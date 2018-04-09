@@ -24,7 +24,6 @@ to the terms of the associated Analog Devices License Agreement.
 
 #include <sys/platform.h>
 /* SPU Manager includes */
-#include <drivers/dac/adau1962a/adi_adau1962a.h>
 #include <stdio.h>
 #include <string.h>
 #include <math.h>
@@ -42,9 +41,6 @@ to the terms of the associated Analog Devices License Agreement.
 /*==============  D E F I N E S  ===============*/
 
 /*=============  D A T A  =============*/
-
-/* Twi  */
-static uint8_t TwiMemory[ADI_TWI_MEMORY_SIZE];
 
 /* Counter to keep track of number of ADC buffers processed */
 static volatile uint32_t AsrcCount = 0u;
@@ -123,7 +119,7 @@ int main()
 
 
     /* Initialize ADAU1962A */
-    Adau1962Dac dac(&TwiMemory, DacCallback);
+    Adau1962Dac dac(DacCallback);
 
     /* Submit ASRC buffers */
     if(Result == 0u)
