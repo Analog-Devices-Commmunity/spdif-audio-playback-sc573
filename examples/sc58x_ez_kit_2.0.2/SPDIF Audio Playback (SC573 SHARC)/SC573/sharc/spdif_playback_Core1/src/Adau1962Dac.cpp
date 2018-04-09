@@ -6,6 +6,7 @@
  */
 
 #include "Adau1962Dac.h"
+#include "SpdifPlayback.h"
 #include "../../../../spdif_playback.h"
 #include <stdio.h>
 #include <stdlib.h>
@@ -111,6 +112,15 @@ Adau1962Dac::~Adau1962Dac() {
 	// TODO Auto-generated destructor stub
 }
 
+void Adau1962Dac::Adau1962aSubmitBuffers(void) {
+    /* submit ping buffer */
+	ADI_ADAU1962A_RESULT result = adi_adau1962a_SubmitBuffer(Adau1962Dac::phAdau1962a, &SpdifPlayback::DacBuf[AUDIO_BUFFER_SIZE * 0u], AUDIO_BUFFER_SIZE);
+	CheckAdau1962aResult(ADI_ADAU1962A_SUCCESS, result);
+
+    /* submit pong buffer */
+	result = adi_adau1962a_SubmitBuffer(Adau1962Dac::phAdau1962a, &SpdifPlayback::DacBuf[AUDIO_BUFFER_SIZE * 1u], AUDIO_BUFFER_SIZE);
+	CheckAdau1962aResult(ADI_ADAU1962A_SUCCESS, result);
+}
 
 void Adau1962Dac::Enable() {
 	ADI_ADAU1962A_RESULT result = adi_adau1962a_Enable(phAdau1962a, true);

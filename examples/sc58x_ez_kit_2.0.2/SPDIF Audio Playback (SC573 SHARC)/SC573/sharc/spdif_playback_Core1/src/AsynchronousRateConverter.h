@@ -19,6 +19,7 @@ private:
 public:
 	AsynchronousRateConverter(ADI_CALLBACK callback);
 	virtual ~AsynchronousRateConverter();
+	void AsrcSubmitBuffers(void);
 	void Enable();
 	void Disable();
 	void Close();

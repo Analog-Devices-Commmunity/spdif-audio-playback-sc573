@@ -36,6 +36,7 @@ to the terms of the associated Analog Devices License Agreement.
 #include "SpdifDevice.h"
 #include "AsynchronousRateConverter.h"
 #include "Adau1962Dac.h"
+#include "SpdifPlayback.h"
 #include <SRU.h>
 
 /*==============  D E F I N E S  ===============*/
@@ -43,26 +44,26 @@ to the terms of the associated Analog Devices License Agreement.
 /*=============  D A T A  =============*/
 
 /* Counter to keep track of number of ADC buffers processed */
-static volatile uint32_t AsrcCount = 0u;
+//static volatile uint32_t SpdifPlayback::AsrcCount = 0u;
 /* Counter to keep track of number of DAC buffers processed */
-static volatile uint32_t DacCount = 0u;
+//static volatile uint32_t SpdifPlayback::DacCount = 0u;
 
 /* DAC buffer pointer */
-static volatile void *pGetASRC = NULL;
+//static volatile void *SpdifPlayback::pGetASRC = NULL;
 /* ADC buffer pointer */
-static volatile void *pGetDAC = NULL;
+//static volatile void *SpdifPlayback::pGetDAC = NULL;
 
-static void *pASRC;
-static void *pDAC;
+//static void *SpdifPlayback::pASRC;
+//static void *SpdifPlayback::pDAC;
 
 /* Flag to register callback error */
-static volatile bool bEventError = false;
+//static volatile bool SpdifPlayback::bEventError = false;
 
 /* Adc linear buffer that is divided into 2 sub buffers; ping and pong */
-ADI_CACHE_ALIGN static int8_t AsrcBuf[ADI_CACHE_ROUND_UP_SIZE(AUDIO_BUFFER_SIZE * 2, int8_t)];
+//ADI_CACHE_ALIGN static int8_t SpdifPlayback::AsrcBuf[ADI_CACHE_ROUND_UP_SIZE(AUDIO_BUFFER_SIZE * 2, int8_t)];
 
 /* Dac linear buffer that is divided into 2 sub buffers; ping and pong  */
-static int8_t DacBuf[AUDIO_BUFFER_SIZE * 2];
+//static int8_t SpdifPlayback::DacBuf[AUDIO_BUFFER_SIZE * 2];
 
 
 /*=============  L O C A L    F U N C T I O N    P R O T O T Y P E S =============*/
@@ -99,48 +100,52 @@ int main()
     /* configure System Event Controller SEC and Signal Routing Unit SRU */
     adi_initComponents();
 
-    /* Initialize power service */
-    PowerService ps;
+	SpdifPlayback playback;
 
-    /* Initialize SPU */
-    SystemProtectionService sps;
-
-	/* Initialize Precision Clock Generator */
-    PrecisionClockGenerator pcg;
-
-    /* Initialize GPIO for ADC/DAC reset control */
-    GeneralPurposeIO gpio;
-
-	/* Initialize SPDIF */
-    SpdifDevice spdif;
-
-    /* Initialize Asynchronous Rate Converter for the DAC*/
-    AsynchronousRateConverter asrc(AsrcCallback);
-
-
-    /* Initialize ADAU1962A */
-    Adau1962Dac dac(DacCallback);
+//    /* Initialize power service */
+//    PowerService ps;
+//
+//    /* Initialize SPU */
+//    SystemProtectionService sps;
+//
+//	/* Initialize Precision Clock Generator */
+//    PrecisionClockGenerator pcg;
+//
+//    /* Initialize GPIO for ADC/DAC reset control */
+//    GeneralPurposeIO gpio;
+//
+//	/* Initialize SPDIF */
+//    SpdifDevice spdif;
+//
+//    /* Initialize Asynchronous Rate Converter for the DAC*/
+//    AsynchronousRateConverter asrc(AsrcCallback);
+//
+//
+//    /* Initialize ADAU1962A */
+//    Adau1962Dac dac(DacCallback);
 
     /* Submit ASRC buffers */
-    if(Result == 0u)
-    {
-        Result = AsrcSubmitBuffers();
-    }
+	playback.asrc.AsrcSubmitBuffers();
+//    if(Result == 0u)
+//    {
+//        Result = AsrcSubmitBuffers();
+//    }
 
     /* Submit DAC buffers */
-    if(Result == 0u)
-    {
-        Result = Adau1962aSubmitBuffers();
-    }
+	playback.dac.Adau1962aSubmitBuffers();
+//    if(Result == 0u)
+//    {
+//        Result = Adau1962aSubmitBuffers();
+//    }
 
     /* Enable the ASRC */
-    asrc.Enable();
+    playback.asrc.Enable();
 
 	/* Enable Rx SPDIF */
-    spdif.Enable();
+    playback.spdif.Enable();
 
 	/* Enable the PCG */
-	pcg.Enable();
+    playback.pcg.Enable();
 
     if(Result == 0u)
     {
@@ -159,7 +164,7 @@ int main()
             }
 
             /* check if an error has been detected in callback */
-            if(bEventError)
+            if(SpdifPlayback::bEventError)
             {
                 /* there has been an error returned in the callback */
                 Result =1u;
@@ -169,20 +174,20 @@ int main()
         }
 
         // close devices
-        spdif.Disable();
-        spdif.Close();
+        playback.spdif.Disable();
+        playback.spdif.Close();
 
         /* Disable and close DAC */
-        dac.Disable();
-        dac.Close();
+        playback.dac.Disable();
+        playback.dac.Close();
 
         /* Disable and close ASRC */
-        asrc.Disable();
-        asrc.Close();
+        playback.asrc.Disable();
+        playback.asrc.Close();
 
 		/* Disable and close PCG */
-        pcg.Disable();
-        pcg.Close();
+        playback.pcg.Disable();
+        playback.pcg.Close();
     }
 
     if (Result == 0u)
@@ -212,14 +217,14 @@ uint32_t AsrcSubmitBuffers(void)
     uint32_t Result = 0u;
 
     /* submit ping buffer */
-    if((uint32_t)adi_asrc_OpSubmitBuffer(AsynchronousRateConverter::phAsrc0, &AsrcBuf[AUDIO_BUFFER_SIZE * 0u], AUDIO_BUFFER_SIZE) != 0u)
+    if((uint32_t)adi_asrc_OpSubmitBuffer(AsynchronousRateConverter::phAsrc0, &SpdifPlayback::AsrcBuf[AUDIO_BUFFER_SIZE * 0u], AUDIO_BUFFER_SIZE) != 0u)
     {
         /* return error */
         return 1u;
     }
 
     /* submit pong buffer */
-    if((uint32_t)adi_asrc_OpSubmitBuffer(AsynchronousRateConverter::phAsrc0, &AsrcBuf[AUDIO_BUFFER_SIZE * 1u], AUDIO_BUFFER_SIZE) != 0u)
+    if((uint32_t)adi_asrc_OpSubmitBuffer(AsynchronousRateConverter::phAsrc0, &SpdifPlayback::AsrcBuf[AUDIO_BUFFER_SIZE * 1u], AUDIO_BUFFER_SIZE) != 0u)
     {
         /* return error */
         return 1u;
@@ -243,14 +248,14 @@ uint32_t Adau1962aSubmitBuffers(void)
     uint32_t Result = 0u;
 
     /* submit ping buffer */
-    if((uint32_t)adi_adau1962a_SubmitBuffer(Adau1962Dac::phAdau1962a, &DacBuf[AUDIO_BUFFER_SIZE * 0u], AUDIO_BUFFER_SIZE) != 0u)
+    if((uint32_t)adi_adau1962a_SubmitBuffer(Adau1962Dac::phAdau1962a, &SpdifPlayback::DacBuf[AUDIO_BUFFER_SIZE * 0u], AUDIO_BUFFER_SIZE) != 0u)
     {
         /* return error */
         return 1u;
     }
 
     /* submit pong buffer */
-    if((uint32_t)adi_adau1962a_SubmitBuffer(Adau1962Dac::phAdau1962a, &DacBuf[AUDIO_BUFFER_SIZE * 1u], AUDIO_BUFFER_SIZE) != 0u)
+    if((uint32_t)adi_adau1962a_SubmitBuffer(Adau1962Dac::phAdau1962a, &SpdifPlayback::DacBuf[AUDIO_BUFFER_SIZE * 1u], AUDIO_BUFFER_SIZE) != 0u)
     {
         /* return error */
         return 1u;
@@ -279,11 +284,11 @@ uint32_t ProcessBuffers(void)
     int8_t *pDst;
 
     /* re-submit the ASRC output buffer */
-    if(pGetASRC != NULL)
+    if(SpdifPlayback::pGetASRC != NULL)
     {
 
         /* DAC cannot be started until the first two ping-pong ASRC buffers are processed */
-        if(AsrcCount == 2)
+        if(SpdifPlayback::AsrcCount == 2)
         {
             /* enable data flow */
         	// TODO
@@ -294,33 +299,33 @@ uint32_t ProcessBuffers(void)
             }
         }
 
-    	pASRC = (void *)pGetASRC;
+    	SpdifPlayback::pASRC = (void *)SpdifPlayback::pGetASRC;
 
         /* submit the ADC buffer */
-        eResult1 = adi_asrc_OpSubmitBuffer(AsynchronousRateConverter::phAsrc0, (void *) pASRC, AUDIO_BUFFER_SIZE);
+        eResult1 = adi_asrc_OpSubmitBuffer(AsynchronousRateConverter::phAsrc0, (void *) SpdifPlayback::pASRC, AUDIO_BUFFER_SIZE);
 		if(eResult1)
 		{
 			return 1u;
 		}
-        pGetASRC = NULL;
+        SpdifPlayback::pGetASRC = NULL;
     }
 
     /* re-submit the DAC buffer */
-    if(pGetDAC != NULL)
+    if(SpdifPlayback::pGetDAC != NULL)
     {
-        pDAC = (void *)pGetDAC;
+        SpdifPlayback::pDAC = (void *)SpdifPlayback::pGetDAC;
 
         /* submit the DAC buffer */
-        eResult2 = adi_adau1962a_SubmitBuffer(Adau1962Dac::phAdau1962a, (void *) pDAC, AUDIO_BUFFER_SIZE);
+        eResult2 = adi_adau1962a_SubmitBuffer(Adau1962Dac::phAdau1962a, (void *) SpdifPlayback::pDAC, AUDIO_BUFFER_SIZE);
 
-        pGetDAC = NULL;
+        SpdifPlayback::pGetDAC = NULL;
     }
 
     /* copy to DAC buffer */
-    if ((pDAC != NULL) && (pASRC != NULL))
+    if ((SpdifPlayback::pDAC != NULL) && (SpdifPlayback::pASRC != NULL))
     {
-        pSrc =  (int8_t *)pASRC;
-        pDst =  (int8_t *)pDAC;
+        pSrc =  (int8_t *)SpdifPlayback::pASRC;
+        pDst =  (int8_t *)SpdifPlayback::pDAC;
 
         for(i=0; i<AUDIO_BUFFER_SIZE;i++)
         {
@@ -328,8 +333,8 @@ uint32_t ProcessBuffers(void)
 
         }
 
-        pDAC = NULL;
-        pASRC = NULL;
+        SpdifPlayback::pDAC = NULL;
+        SpdifPlayback::pASRC = NULL;
 
     }
 
@@ -352,12 +357,12 @@ void AsrcCallback(void *pCBParam, uint32_t nEvent, void *pArg)
     {
         case ADI_SPORT_EVENT_RX_BUFFER_PROCESSED:
             /* Update callback count */
-            AsrcCount++;
+            SpdifPlayback::AsrcCount++;
             /* store pointer to the processed buffer that caused the callback */
-            pGetASRC = pArg;
+            SpdifPlayback::pGetASRC = pArg;
             break;
         default:
-            bEventError = true;
+            SpdifPlayback::bEventError = true;
             break;
     }
 }
@@ -378,12 +383,12 @@ void DacCallback(void *pCBParam, uint32_t nEvent, void *pArg)
     {
         case ADI_SPORT_EVENT_TX_BUFFER_PROCESSED:
             /* Update callback count */
-            DacCount++;
+            SpdifPlayback::DacCount++;
             /* store pointer to the processed buffer that caused the callback */
-            pGetDAC = pArg;
+            SpdifPlayback::pGetDAC = pArg;
             break;
         default:
-            bEventError = true;
+            SpdifPlayback::bEventError = true;
             break;
     }
 }

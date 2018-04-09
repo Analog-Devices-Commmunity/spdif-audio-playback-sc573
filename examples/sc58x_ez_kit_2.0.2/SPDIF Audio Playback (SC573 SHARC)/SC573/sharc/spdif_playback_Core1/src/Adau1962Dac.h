@@ -23,6 +23,7 @@ public:
 
 	Adau1962Dac(ADI_CALLBACK pfCallback);
 	virtual ~Adau1962Dac();
+	void Adau1962aSubmitBuffers(void);
 	void Enable();
 	void Disable();
 	void Close();

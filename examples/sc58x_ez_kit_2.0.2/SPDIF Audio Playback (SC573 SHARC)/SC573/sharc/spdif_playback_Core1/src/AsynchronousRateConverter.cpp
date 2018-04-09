@@ -6,6 +6,7 @@
  */
 
 #include "AsynchronousRateConverter.h"
+#include "SpdifPlayback.h"
 #include "../../../../spdif_playback.h"
 #include <stdio.h>
 #include <stdlib.h>
@@ -49,6 +50,17 @@ AsynchronousRateConverter::AsynchronousRateConverter(ADI_CALLBACK callback) {
 
 AsynchronousRateConverter::~AsynchronousRateConverter() {
 	// TODO Auto-generated destructor stub
+}
+
+void AsynchronousRateConverter::AsrcSubmitBuffers(void) {
+    /* submit ping buffer */
+	ADI_ASRC_RESULT result = adi_asrc_OpSubmitBuffer(AsynchronousRateConverter::phAsrc0, &SpdifPlayback::AsrcBuf[AUDIO_BUFFER_SIZE * 0u], AUDIO_BUFFER_SIZE);
+	CheckAsrcResult(ADI_ASRC_SUCCESS, result);
+
+    /* submit pong buffer */
+	result = adi_asrc_OpSubmitBuffer(AsynchronousRateConverter::phAsrc0, &SpdifPlayback::AsrcBuf[AUDIO_BUFFER_SIZE * 1u], AUDIO_BUFFER_SIZE);
+	CheckAsrcResult(ADI_ASRC_SUCCESS, result);
+
 }
 
 void AsynchronousRateConverter::Enable() {
