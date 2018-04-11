@@ -57,10 +57,10 @@ AsynchronousRateConverter::AsynchronousRateConverter() {
                       &AsrcMemory0[0],
                       ADI_ASRC_MEMORY_SIZE,
                       &phAsrc0);
-	CheckAsrcResult(ADI_ASRC_SUCCESS, result);
+	CheckAsrcResult(ADI_ASRC_SUCCESS, result, "Constructor. adi_asrc_Open");
 
     result = adi_asrc_SetSerialFormat(phAsrc0, ADI_ASRC_INPUT_I2S, ADI_ASRC_OUTPUT_I2S, ADI_ASRC_WORD_LENGTH_24);
-	CheckAsrcResult(ADI_ASRC_SUCCESS, result);
+	CheckAsrcResult(ADI_ASRC_SUCCESS, result, "Constructor. adi_asrc_SetSerialFormat");
 
     /* configure SPORT, this will handle Asrc0 */
     OpAsrcSportConfig.SportDevNum		= 0u;
@@ -73,11 +73,11 @@ AsynchronousRateConverter::AsynchronousRateConverter() {
 
     /* Configure input ASRC sport channel */
     result = adi_asrc_OpConfigSport(phAsrc0, &OpAsrcSportConfig);
-	CheckAsrcResult(ADI_ASRC_SUCCESS, result);
+	CheckAsrcResult(ADI_ASRC_SUCCESS, result, "Constructor. adi_asrc_OpConfigSport");
 
     /* Register output Sport callback */
     result = adi_asrc_OpRegisterSportCallback(phAsrc0, AsrcCallback, NULL);
-	CheckAsrcResult(ADI_ASRC_SUCCESS, result);
+	CheckAsrcResult(ADI_ASRC_SUCCESS, result, "Constructor. adi_asrc_OpRegisterSportCallback");
 }
 
 AsynchronousRateConverter::~AsynchronousRateConverter() {
@@ -87,47 +87,45 @@ AsynchronousRateConverter::~AsynchronousRateConverter() {
 }
 
 void AsynchronousRateConverter::SubmitBuffer(void* buffer) {
-	ADI_ASRC_RESULT eResult1;
-	eResult1 = adi_asrc_OpSubmitBuffer(AsynchronousRateConverter::phAsrc0,
-			buffer, AUDIO_BUFFER_SIZE);
-	if (eResult1) {
-		SpdifPlayback::bEventError = true;
-	}
+	ADI_ASRC_RESULT result =
+		adi_asrc_OpSubmitBuffer(AsynchronousRateConverter::phAsrc0, buffer, AUDIO_BUFFER_SIZE);
+	CheckAsrcResult(ADI_ASRC_SUCCESS, result, "SubmitBuffer", false);
 }
 
 void AsynchronousRateConverter::AsrcSubmitBuffers(void) {
     /* submit ping buffer */
 	ADI_ASRC_RESULT result = adi_asrc_OpSubmitBuffer(AsynchronousRateConverter::phAsrc0, &AsynchronousRateConverter::AsrcBuf[AUDIO_BUFFER_SIZE * 0u], AUDIO_BUFFER_SIZE);
-	CheckAsrcResult(ADI_ASRC_SUCCESS, result);
+	CheckAsrcResult(ADI_ASRC_SUCCESS, result, "AsrcSubmitBuffers");
 
     /* submit pong buffer */
 	result = adi_asrc_OpSubmitBuffer(AsynchronousRateConverter::phAsrc0, &AsynchronousRateConverter::AsrcBuf[AUDIO_BUFFER_SIZE * 1u], AUDIO_BUFFER_SIZE);
-	CheckAsrcResult(ADI_ASRC_SUCCESS, result);
+	CheckAsrcResult(ADI_ASRC_SUCCESS, result, "AsrcSubmitBuffers");
 
 }
 
 void AsynchronousRateConverter::Enable() {
 	ADI_ASRC_RESULT result = adi_asrc_Enable(phAsrc0, true);
-	CheckAsrcResult(ADI_ASRC_SUCCESS, result);
+	CheckAsrcResult(ADI_ASRC_SUCCESS, result, "Enable");
 }
 
 void AsynchronousRateConverter::Disable() {
 	ADI_ASRC_RESULT result = adi_asrc_Enable(phAsrc0, false);
-	CheckAsrcResult(ADI_ASRC_SUCCESS, result);
+	CheckAsrcResult(ADI_ASRC_SUCCESS, result, "Disable");
 }
 
 void AsynchronousRateConverter::Close() {
 	ADI_ASRC_RESULT result = adi_asrc_Close(phAsrc0);
-	CheckAsrcResult(ADI_ASRC_SUCCESS, result);
+	CheckAsrcResult(ADI_ASRC_SUCCESS, result, "Close");
 }
 
-void AsynchronousRateConverter::CheckAsrcResult(ADI_ASRC_RESULT expected, ADI_ASRC_RESULT result)
+void AsynchronousRateConverter::CheckAsrcResult(ADI_ASRC_RESULT expected, ADI_ASRC_RESULT result, std::string message, bool stop)
 {
 	if ( result != expected )
 	{
 		char message[96];
-		sprintf(message, "AsynchronousRateConverter::CheckAsrcResult expected(%d) != result(%d)", expected, result);
+		sprintf(message, "AsynchronousRateConverter::%s expected(%d) != result(%d)", message, expected, result);
 		perror(message);
-		abort();
+		SpdifPlayback::bEventError = true;
+		if (stop) abort();
 	}
 }

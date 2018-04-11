@@ -10,6 +10,7 @@
 
 #include <drivers/asrc/adi_asrc.h>
 #include "spdif_playback.h"
+#include <string>
 
 class AsynchronousRateConverter {
 private:
@@ -28,7 +29,7 @@ public:
 	void Enable();
 	void Disable();
 	void Close();
-	static void CheckAsrcResult(ADI_ASRC_RESULT expected, ADI_ASRC_RESULT result);
+	static void CheckAsrcResult(ADI_ASRC_RESULT expected, ADI_ASRC_RESULT result, std::string message, bool stop = true);
 };
 
 #endif /* ASYNCHRONOUSRATECONVERTER_H_ */
