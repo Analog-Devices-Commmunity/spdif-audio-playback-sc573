@@ -23,9 +23,6 @@ uint8_t Adau1962Dac::TwiMemory[ADI_TWI_MEMORY_SIZE];
 /* Dac linear buffer that is divided into 2 sub buffers; ping and pong  */
 int8_t Adau1962Dac::DacBuf[AUDIO_BUFFER_SIZE * 2];
 
-/* Counter to keep track of number of DAC buffers processed */
-//volatile uint32_t Adau1962Dac::DacCount = 0u;
-
 /*
  * DAC Callback.
  *
@@ -41,18 +38,20 @@ void DacCallback(void *pCBParam, uint32_t nEvent, void *pArg)
     switch(nEvent)
     {
         case ADI_SPORT_EVENT_TX_BUFFER_PROCESSED:
-            /* Update callback count */
-        	//Adau1962Dac::DacCount++;
             /* store pointer to the processed buffer that caused the callback */
             SpdifPlayback::pGetDAC = pArg;
             break;
         default:
             SpdifPlayback::bEventError = true;
             break;
-    }
+   }
 }
 
 Adau1962Dac::Adau1962Dac() {
+	// Initialize to 0 so that buffers can be used right away
+	for (int i=0; i<AUDIO_BUFFER_SIZE * 2; i++) {
+		Adau1962Dac::DacBuf[i] = 0;
+	}
     ADI_ADAU1962A_RESULT        eResult;
     ADI_ADAU1962A_TWI_CONFIG    TwiConfig;
     ADI_ADAU1962A_SPORT_CONFIG  SportConfig;

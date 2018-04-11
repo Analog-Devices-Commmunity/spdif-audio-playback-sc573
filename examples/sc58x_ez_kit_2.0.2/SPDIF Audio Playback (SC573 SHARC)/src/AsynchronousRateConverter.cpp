@@ -17,7 +17,7 @@ ADI_ASRC_HANDLE AsynchronousRateConverter::phAsrc0;
 uint8_t AsynchronousRateConverter::OpAsrcSportMemory[ADI_SPORT_DMA_MEMORY_SIZE];
 ADI_ASRC_SPORT_CONFIG AsynchronousRateConverter::OpAsrcSportConfig;
 /* Counter to keep track of number of ADC buffers processed */
-volatile uint32_t AsynchronousRateConverter::AsrcCount = 0u;
+//volatile uint32_t AsynchronousRateConverter::AsrcCount = 0u;
 
 ADI_CACHE_ALIGN int8_t AsynchronousRateConverter::AsrcBuf[ADI_CACHE_ROUND_UP_SIZE(AUDIO_BUFFER_SIZE * 2, int8_t)];
 
@@ -37,7 +37,7 @@ void AsrcCallback(void *pCBParam, uint32_t nEvent, void *pArg)
     {
         case ADI_SPORT_EVENT_RX_BUFFER_PROCESSED:
             /* Update callback count */
-        	AsynchronousRateConverter::AsrcCount++;
+        	//AsynchronousRateConverter::AsrcCount++;
             /* store pointer to the processed buffer that caused the callback */
             SpdifPlayback::pGetASRC = pArg;
             break;
@@ -48,7 +48,12 @@ void AsrcCallback(void *pCBParam, uint32_t nEvent, void *pArg)
 }
 
 AsynchronousRateConverter::AsynchronousRateConverter() {
-    /* Open ASRC 0 */
+	// Initialize to 0 so that buffers can be used right away
+	for (int i=0; i<AUDIO_BUFFER_SIZE * 2; i++) {
+		AsynchronousRateConverter::AsrcBuf[i] = 0;
+	}
+
+	/* Open ASRC 0 */
 	ADI_ASRC_RESULT result = adi_asrc_Open(0u,
     				  0u,
                       &AsrcMemory0[0],

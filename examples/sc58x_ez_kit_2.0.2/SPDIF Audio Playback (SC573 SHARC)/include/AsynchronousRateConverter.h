@@ -30,7 +30,7 @@ public:
 	static void CheckAsrcResult(ADI_ASRC_RESULT expected, ADI_ASRC_RESULT result);
 	static ADI_ASRC_HANDLE phAsrc0;
 	/* Counter to keep track of number of ADC buffers processed */
-	static volatile uint32_t AsrcCount;
+	//static volatile uint32_t AsrcCount;
 };
 
 #endif /* ASYNCHRONOUSRATECONVERTER_H_ */

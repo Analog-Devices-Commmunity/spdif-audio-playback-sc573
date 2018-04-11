@@ -45,6 +45,9 @@ SpdifPlayback::SpdifPlayback()
 
 	/* Enable the PCG */
     pcg.Enable();
+
+    // Enable DAC. Ok since we initialized to zero
+    dac.Enable();
 }
 
 SpdifPlayback::~SpdifPlayback() {
@@ -94,13 +97,13 @@ void SpdifPlayback::ProcessBuffers(void) {
     if(SpdifPlayback::pGetASRC != NULL)
     {
 
-        /* DAC cannot be started until the first two ping-pong ASRC buffers are processed */
-        if(AsynchronousRateConverter::AsrcCount == 2)
-        {
-            /* enable data flow */
-        	dac.Enable();
-
-        }
+//        /* DAC cannot be started until the first two ping-pong ASRC buffers are processed */
+//        if(AsynchronousRateConverter::AsrcCount == 2)
+//        {
+//            /* enable data flow */
+//        	dac.Enable();
+//
+//        }
 
     	SpdifPlayback::pASRC = (void *)SpdifPlayback::pGetASRC;
 
