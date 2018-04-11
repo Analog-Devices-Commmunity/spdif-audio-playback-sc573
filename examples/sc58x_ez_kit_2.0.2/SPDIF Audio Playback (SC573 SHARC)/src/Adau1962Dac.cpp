@@ -62,7 +62,7 @@ Adau1962Dac::Adau1962Dac() {
                                      &Adau1962aMemory,
                                      ADI_ADAU1962A_MEMORY_SIZE,
                                      &phAdau1962a);
-    CheckAdau1962aResult(ADI_ADAU1962A_SUCCESS, result);
+    CheckAdau1962aResult(ADI_ADAU1962A_SUCCESS, result, "Constructor. adi_adau1962a_Open");
 
     /* TWI parameters required to open/configure TWI */
     TwiConfig.TwiDevNum     = 0u;
@@ -72,7 +72,7 @@ Adau1962Dac::Adau1962Dac() {
 
     /* Configure TWI */
     result = adi_adau1962a_ConfigTwi (phAdau1962a, &TwiConfig);
-    CheckAdau1962aResult(ADI_ADAU1962A_SUCCESS, result);
+    CheckAdau1962aResult(ADI_ADAU1962A_SUCCESS, result, "Constructor. adi_adau1962a_ConfigTwi");
 
     /* SPORT parameters required to open/configure SPORT */
     SportConfig.SportDevNum     = 2u;
@@ -84,14 +84,14 @@ Adau1962Dac::Adau1962Dac() {
 
     /* Configure SPORT */
     result = adi_adau1962a_ConfigSport (phAdau1962a, &SportConfig);
-    CheckAdau1962aResult(ADI_ADAU1962A_SUCCESS, result);
+    CheckAdau1962aResult(ADI_ADAU1962A_SUCCESS, result, "Constructor. adi_adau1962a_ConfigSport");
 
     /* DAC Master Power-up */
     result = adi_adau1962a_ConfigDacPwr (phAdau1962a,
                                                ADI_ADAU1962A_CHNL_DAC_MSTR,
                                                ADI_ADAU1962A_DAC_PWR_LOW,
                                                true);
-    CheckAdau1962aResult(ADI_ADAU1962A_SUCCESS, result);
+    CheckAdau1962aResult(ADI_ADAU1962A_SUCCESS, result, "Constructor. adi_adau1962a_ConfigDacPwr");
 
     /*
      * Configure PLL clock - DAC is clock master and drives SPORT clk and FS
@@ -101,7 +101,7 @@ Adau1962Dac::Adau1962Dac() {
                                                ADAU1962A_MCLK_IN,
                                                ADI_ADAU1962A_MCLK_SEL_PLL,
                                                ADI_ADAU1962A_PLL_IN_MCLKI_XTALI);
-    CheckAdau1962aResult(ADI_ADAU1962A_SUCCESS, result);
+    CheckAdau1962aResult(ADI_ADAU1962A_SUCCESS, result, "Constructor. adi_adau1962a_ConfigPllClk");
 
     /*
      * Configure serial data clock
@@ -115,28 +115,31 @@ Adau1962Dac::Adau1962Dac() {
                                                   false,
                                                   false,
                                                   LRCLK_HI_LO_1962);
-    CheckAdau1962aResult(ADI_ADAU1962A_SUCCESS, result);
+    CheckAdau1962aResult(ADI_ADAU1962A_SUCCESS, result, "Constructor. adi_adau1962a_ConfigSerialClk");
     /* Power-up PLL */
     result = adi_adau1962a_ConfigBlockPwr (phAdau1962a,
                                                  false,
                                                  true,
                                                  true);
-    CheckAdau1962aResult(ADI_ADAU1962A_SUCCESS, result);
+    CheckAdau1962aResult(ADI_ADAU1962A_SUCCESS, result, "Constructor. adi_adau1962a_ConfigBlockPwr");
 
     /* Configure Sample rate */
     result = adi_adau1962a_SetSampleRate (phAdau1962a, SAMPLE_RATE * 1u);
-    CheckAdau1962aResult(ADI_ADAU1962A_SUCCESS, result);
+    CheckAdau1962aResult(ADI_ADAU1962A_SUCCESS, result, "Constructor. adi_adau1962a_SetSampleRate");
 
     /* Configure Word width */
     result = adi_adau1962a_SetWordWidth (phAdau1962a,
                                                ADI_ADAU1962A_WORD_WIDTH_24);
-    CheckAdau1962aResult(ADI_ADAU1962A_SUCCESS, result);
+    CheckAdau1962aResult(ADI_ADAU1962A_SUCCESS, result, "Constructor. adi_adau1962a_SetWordWidth");
 
     /* Register callback */
     result = adi_adau1962a_RegisterCallback (phAdau1962a,
     											DacCallback,
                                                    NULL);
-    CheckAdau1962aResult(ADI_ADAU1962A_SUCCESS, result);
+    CheckAdau1962aResult(ADI_ADAU1962A_SUCCESS, result, "Constructor. adi_adau1962a_RegisterCallback");
+
+    /* Submit DAC buffers */
+	Adau1962aSubmitBuffers();
 }
 
 Adau1962Dac::~Adau1962Dac() {
@@ -145,38 +148,45 @@ Adau1962Dac::~Adau1962Dac() {
     Close();
 }
 
+void Adau1962Dac::SubmitBuffer(void* buffer) {
+	ADI_ADAU1962A_RESULT result =
+			adi_adau1962a_SubmitBuffer(Adau1962Dac::phAdau1962a, (void *) buffer, AUDIO_BUFFER_SIZE);
+	CheckAdau1962aResult(ADI_ADAU1962A_SUCCESS, result, "SubmitBuffer", false);
+}
+
 void Adau1962Dac::Adau1962aSubmitBuffers(void) {
     /* submit ping buffer */
 	ADI_ADAU1962A_RESULT result = adi_adau1962a_SubmitBuffer(Adau1962Dac::phAdau1962a, &Adau1962Dac::DacBuf[AUDIO_BUFFER_SIZE * 0u], AUDIO_BUFFER_SIZE);
-	CheckAdau1962aResult(ADI_ADAU1962A_SUCCESS, result);
+	CheckAdau1962aResult(ADI_ADAU1962A_SUCCESS, result, "Adau1962aSubmitBuffers");
 
     /* submit pong buffer */
 	result = adi_adau1962a_SubmitBuffer(Adau1962Dac::phAdau1962a, &Adau1962Dac::DacBuf[AUDIO_BUFFER_SIZE * 1u], AUDIO_BUFFER_SIZE);
-	CheckAdau1962aResult(ADI_ADAU1962A_SUCCESS, result);
+	CheckAdau1962aResult(ADI_ADAU1962A_SUCCESS, result, "Adau1962aSubmitBuffers");
 }
 
 void Adau1962Dac::Enable() {
 	ADI_ADAU1962A_RESULT result = adi_adau1962a_Enable(phAdau1962a, true);
-	CheckAdau1962aResult(ADI_ADAU1962A_SUCCESS, result);
+	CheckAdau1962aResult(ADI_ADAU1962A_SUCCESS, result, "Enable");
 }
 
 void Adau1962Dac::Disable() {
 	ADI_ADAU1962A_RESULT result = adi_adau1962a_Enable(phAdau1962a, false);
-	CheckAdau1962aResult(ADI_ADAU1962A_SUCCESS, result);
+	CheckAdau1962aResult(ADI_ADAU1962A_SUCCESS, result, "Disable");
 }
 
 void Adau1962Dac::Close() {
 	ADI_ADAU1962A_RESULT result = adi_adau1962a_Close(phAdau1962a);
-	CheckAdau1962aResult(ADI_ADAU1962A_SUCCESS, result);
+	CheckAdau1962aResult(ADI_ADAU1962A_SUCCESS, result, "Close");
 }
 
 
-void Adau1962Dac::CheckAdau1962aResult(ADI_ADAU1962A_RESULT expected, ADI_ADAU1962A_RESULT result) {
+void Adau1962Dac::CheckAdau1962aResult(ADI_ADAU1962A_RESULT expected, ADI_ADAU1962A_RESULT result, std::string message, bool stop) {
 	if ( result != expected )
 	{
 		char message[96];
-		sprintf(message, "SpdifDevice::CheckSpdifResult expected(%d) != result(%d)", expected, result);
+		sprintf(message, "SpdifDevice::%s expected(%d) != result(%d)", message, expected, result);
 		perror(message);
-		abort();
+		SpdifPlayback::bEventError = true;
+		if (stop) abort();
 	}
 }

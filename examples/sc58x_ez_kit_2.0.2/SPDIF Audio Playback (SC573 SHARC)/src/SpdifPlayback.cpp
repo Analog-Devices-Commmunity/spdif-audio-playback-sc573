@@ -10,14 +10,6 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-/*=============  C A L L B A C K    F U N C T I O N    P R O T O T Y P E S =============*/
-
-///* ASRC callback */
-//void AsrcCallback(void *pCBParam, uint32_t nEvent, void *pArg);
-///* DAC callback */
-//void DacCallback(void *pCBParam, uint32_t nEvent, void *pArg);
-
-
 /* DAC buffer pointer */
 volatile void* SpdifPlayback::pGetASRC = NULL;
 /* ADC buffer pointer */
@@ -31,12 +23,12 @@ volatile bool SpdifPlayback::bEventError = false;
 
 SpdifPlayback::SpdifPlayback()
 {
-    /* Submit ASRC buffers */
-	asrc.AsrcSubmitBuffers();
+}
 
-    /* Submit DAC buffers */
-	dac.Adau1962aSubmitBuffers();
+SpdifPlayback::~SpdifPlayback() {
+}
 
+void SpdifPlayback::Run() {
     /* Enable the ASRC */
     asrc.Enable();
 
@@ -48,13 +40,8 @@ SpdifPlayback::SpdifPlayback()
 
     // Enable DAC. Ok since we initialized to zero
     dac.Enable();
-}
 
-SpdifPlayback::~SpdifPlayback() {
-}
-
-void SpdifPlayback::Run() {
-	bool run = true;
+    bool run = true;
     /* Audio loopback */
     while(run)
     {
@@ -68,8 +55,6 @@ void SpdifPlayback::Run() {
         }
     }
 }
-
-
 
 void SpdifPlayback::ProcessBuffers(void) {
     ADI_ADAU1962A_RESULT    eResult2;
@@ -95,7 +80,8 @@ void SpdifPlayback::ProcessBuffers(void) {
         SpdifPlayback::pDAC = (void *)SpdifPlayback::pGetDAC;
 
         /* submit the DAC buffer */
-        eResult2 = adi_adau1962a_SubmitBuffer(Adau1962Dac::phAdau1962a, (void *) SpdifPlayback::pDAC, AUDIO_BUFFER_SIZE);
+        dac.SubmitBuffer(SpdifPlayback::pDAC);
+        //eResult2 = adi_adau1962a_SubmitBuffer(Adau1962Dac::phAdau1962a, (void *) SpdifPlayback::pDAC, AUDIO_BUFFER_SIZE);
 
         SpdifPlayback::pGetDAC = NULL;
     }

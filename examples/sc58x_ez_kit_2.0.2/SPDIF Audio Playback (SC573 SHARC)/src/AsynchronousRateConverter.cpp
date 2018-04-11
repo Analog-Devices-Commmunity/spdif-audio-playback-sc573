@@ -78,6 +78,9 @@ AsynchronousRateConverter::AsynchronousRateConverter() {
     /* Register output Sport callback */
     result = adi_asrc_OpRegisterSportCallback(phAsrc0, AsrcCallback, NULL);
 	CheckAsrcResult(ADI_ASRC_SUCCESS, result, "Constructor. adi_asrc_OpRegisterSportCallback");
+    /* Submit ASRC buffers */
+	AsrcSubmitBuffers();
+
 }
 
 AsynchronousRateConverter::~AsynchronousRateConverter() {

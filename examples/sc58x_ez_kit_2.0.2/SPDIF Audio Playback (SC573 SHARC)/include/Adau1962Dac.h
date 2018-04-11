@@ -10,9 +10,16 @@
 
 #include <drivers/dac/adau1962a/adi_adau1962a.h>
 #include "spdif_playback.h"
+#include <string>
 
 class Adau1962Dac {
+public:
+	Adau1962Dac();
+	virtual ~Adau1962Dac();
+	void SubmitBuffer(void* buffer);
+	void Enable();
 private:
+	static ADI_ADAU1962A_HANDLE phAdau1962a;
 	/* ADAU1962A DAC DATA */
 	static uint8_t Adau1962aMemory[ADI_ADAU1962A_MEMORY_SIZE];
 	/* ADAU1962A Sport */
@@ -21,18 +28,11 @@ private:
 	static uint8_t TwiMemory[ADI_TWI_MEMORY_SIZE];
 	/* Dac linear buffer that is divided into 2 sub buffers; ping and pong  */
 	static int8_t DacBuf[AUDIO_BUFFER_SIZE * 2];
-public:
-	static ADI_ADAU1962A_HANDLE phAdau1962a;
-	/* Counter to keep track of number of DAC buffers processed */
-	//static volatile uint32_t DacCount;
 
-	Adau1962Dac();
-	virtual ~Adau1962Dac();
 	void Adau1962aSubmitBuffers(void);
-	void Enable();
 	void Disable();
 	void Close();
-	static void CheckAdau1962aResult(ADI_ADAU1962A_RESULT expected, ADI_ADAU1962A_RESULT result);
+	static void CheckAdau1962aResult(ADI_ADAU1962A_RESULT expected, ADI_ADAU1962A_RESULT result, std::string message, bool stop = true);
 
 };
 
