@@ -31,16 +31,15 @@ public:
 	void Run();
 	static void SetErrorTrue();
 	static void ProcessAsrcBuffer(void* buffer);
-
-	/* ADC buffer pointer */
-	static volatile void *pGetDAC;
+	static void ProcessDacBuffer(void* buffer);
 
 private:
 	void ProcessBuffers(void);
 
 	/* DAC buffer pointer */
 	static volatile void *pGetASRC;
-
+	/* ADC buffer pointer */
+	static volatile void *pGetDAC;
 	static void *pASRC;
 	static void *pDAC;
 	/* Flag to register callback error */

@@ -31,7 +31,6 @@ to the terms of the associated Analog Devices License Agreement.
  */
 int main()
 {
-
     /* configure System Event Controller SEC and Signal Routing Unit SRU */
     adi_initComponents();
 

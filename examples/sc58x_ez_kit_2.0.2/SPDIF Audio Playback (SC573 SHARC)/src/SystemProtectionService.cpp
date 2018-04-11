@@ -16,24 +16,6 @@ uint8_t SystemProtectionService::SpuMemory[ADI_SPU_MEMORY_SIZE];
 /* SPU handle */
 ADI_SPU_HANDLE SystemProtectionService::hSpu;
 
-///* Memory required for the SPU operation */
-//static uint8_t SpuMemory[ADI_SPU_MEMORY_SIZE];
-//
-///* SPU handle */
-//static ADI_SPU_HANDLE hSpu;
-
-void SystemProtectionService::CheckSpuResult(ADI_SPU_RESULT expected, ADI_SPU_RESULT result)
-{
-	if ( result != expected )
-	{
-		char message[96];
-		sprintf(message, "SystemProtectionService::CheckSpuResult expected(%d) != result(%d)", expected, result);
-		perror(message);
-		abort();
-	}
-}
-
-
 SystemProtectionService::SystemProtectionService() {
     /* Initialize SPU Service */
 	ADI_SPU_RESULT result = adi_spu_Init(0u, SpuMemory, NULL, NULL, &hSpu);
@@ -59,6 +41,16 @@ SystemProtectionService::SystemProtectionService() {
 }
 
 SystemProtectionService::~SystemProtectionService() {
-	// TODO Auto-generated destructor stub
+}
+
+void SystemProtectionService::CheckSpuResult(ADI_SPU_RESULT expected, ADI_SPU_RESULT result)
+{
+	if ( result != expected )
+	{
+		char message[96];
+		sprintf(message, "SystemProtectionService::CheckSpuResult expected(%d) != result(%d)", expected, result);
+		perror(message);
+		abort();
+	}
 }
 

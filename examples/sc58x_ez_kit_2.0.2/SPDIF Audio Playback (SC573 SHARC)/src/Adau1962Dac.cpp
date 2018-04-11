@@ -39,7 +39,7 @@ void DacCallback(void *pCBParam, uint32_t nEvent, void *pArg)
     {
         case ADI_SPORT_EVENT_TX_BUFFER_PROCESSED:
             /* store pointer to the processed buffer that caused the callback */
-            SpdifPlayback::pGetDAC = pArg;
+            SpdifPlayback::ProcessDacBuffer(pArg);
             break;
         default:
             SpdifPlayback::SetErrorTrue();

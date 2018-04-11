@@ -9,6 +9,7 @@
 #define GENERALPURPOSEIO_H_
 
 #include <services/gpio/adi_gpio.h>
+#include <string>
 
 class GeneralPurposeIO {
 public:
@@ -18,7 +19,7 @@ private:
 	static uint8_t GpioMemory[ADI_GPIO_CALLBACK_MEM_SIZE];
 	static uint32_t gpioMaxCallbacks;
 
-	static void CheckGpioResult(ADI_GPIO_RESULT expected, ADI_GPIO_RESULT result);
+	static void CheckGpioResult(ADI_GPIO_RESULT expected, ADI_GPIO_RESULT result, std::string message);
 };
 
 #endif /* GENERALPURPOSEIO_H_ */

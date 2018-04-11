@@ -36,6 +36,10 @@ void SpdifPlayback::ProcessAsrcBuffer(void* buffer) {
 	SpdifPlayback::pGetASRC = buffer;
 }
 
+void SpdifPlayback::ProcessDacBuffer(void* buffer) {
+	SpdifPlayback::pGetDAC = buffer;
+}
+
 
 void SpdifPlayback::Run() {
     /* Enable the ASRC */

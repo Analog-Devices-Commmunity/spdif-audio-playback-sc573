@@ -34,10 +34,7 @@ void AsrcCallback(void *pCBParam, uint32_t nEvent, void *pArg)
     switch(nEvent)
     {
         case ADI_SPORT_EVENT_RX_BUFFER_PROCESSED:
-            /* Update callback count */
-        	//AsynchronousRateConverter::AsrcCount++;
             /* store pointer to the processed buffer that caused the callback */
-            //SpdifPlayback::pGetASRC = pArg;
         	SpdifPlayback::ProcessAsrcBuffer(pArg);
             break;
         default:

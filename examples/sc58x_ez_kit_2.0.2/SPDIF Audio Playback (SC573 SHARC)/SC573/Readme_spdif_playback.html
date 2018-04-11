@@ -16,7 +16,7 @@
     
   </style></head>
   <body>
-    <h1>Analog Devices, Inc. CrossCore(R) Embedded Studio Application Example</h1>
+    <h1>Modified Analog Devices, Inc. CrossCore(R) Embedded Studio Application Example</h1>
     <h2>ADSP-SC5xx EZ-Kit Board Support Package</h2>
     <h3>Project Name: spdif_playback</h3>
     <h3>CONTENTS</h3>
@@ -41,8 +41,7 @@
     <h3><a name="OV">3. Overview</a></h3>
     <p> The SPDIF playback uses the receive SPDIF interface as a source of a stereo I2S PCM audio stream.
        	The input audio typically has a sampling rate of 48kHz and the AD1962a is configured to 
-       	play back the audio at 96kHz.  In spdif_playback.h there is a #define CALLBACK_COUNT 
-       	that determines the playback duration of the example. By default it is set to run for more than 10 seconds.
+       	play back the audio at 192kHz. The playback runs continously.
     </p>
 
     <h3><a name="HW">4. Hardware Setup</a></h3>
@@ -60,8 +59,8 @@
             |             |                                        |  |   |             |
             |_____________|                                        |  |   |_____________|
                                            _____________           |  |         |
-                              DAI003      |   3.072 MHz |----------x  |         |
-                            25.476MHz -x->|PCGA   48kHz |-------------x     Mem Copy
+                              DAI003      |  12.288 MHz |----------x  |         |
+                            25.476MHz -x->|PCGA  192kHz |-------------x     Mem Copy
                                           |_____________|                       |
                                                                                 |   
                                             _____________                  _____v_______
@@ -86,7 +85,7 @@
     </p>
     
     <h3><a name="EC">5. External connections</a></h3>
-    <p>	Connect a SPDIF audio input to the input connector of SPDIF in/out J12 (red connector).<br><br>
+    <p>	Connect a SPDIF audio input to the input connector of SPDIF in/out J10 (optical input connector).<br><br>
     	 The two channel playback audio can be heard on the audio output connectors of J11 shown
  		as OP1 and OP2 in the block diagram provided.
     </p>

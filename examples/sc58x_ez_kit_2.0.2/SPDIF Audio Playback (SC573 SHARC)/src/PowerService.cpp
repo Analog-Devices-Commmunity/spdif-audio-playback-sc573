@@ -44,6 +44,5 @@ PowerService::PowerService() {
 }
 
 PowerService::~PowerService() {
-	// TODO Auto-generated destructor stub
 }
 
