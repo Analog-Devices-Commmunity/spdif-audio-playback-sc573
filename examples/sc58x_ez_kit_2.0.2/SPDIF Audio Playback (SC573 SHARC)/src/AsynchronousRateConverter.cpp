@@ -16,6 +16,8 @@ ADI_ASRC_HANDLE AsynchronousRateConverter::phAsrc0;
 /* ASRC SPORT configuration */
 uint8_t AsynchronousRateConverter::OpAsrcSportMemory[ADI_SPORT_DMA_MEMORY_SIZE];
 ADI_ASRC_SPORT_CONFIG AsynchronousRateConverter::OpAsrcSportConfig;
+/* Counter to keep track of number of ADC buffers processed */
+volatile uint32_t AsynchronousRateConverter::AsrcCount = 0u;
 
 /*
  * ADC Callback.
@@ -33,7 +35,7 @@ void AsrcCallback(void *pCBParam, uint32_t nEvent, void *pArg)
     {
         case ADI_SPORT_EVENT_RX_BUFFER_PROCESSED:
             /* Update callback count */
-            SpdifPlayback::AsrcCount++;
+        	AsynchronousRateConverter::AsrcCount++;
             /* store pointer to the processed buffer that caused the callback */
             SpdifPlayback::pGetASRC = pArg;
             break;

@@ -20,6 +20,9 @@ uint8_t Adau1962Dac::Adau1962aSportMemory[ADI_SPORT_DMA_MEMORY_SIZE];
 ADI_ADAU1962A_HANDLE Adau1962Dac::phAdau1962a;
 uint8_t Adau1962Dac::TwiMemory[ADI_TWI_MEMORY_SIZE];
 
+/* Counter to keep track of number of DAC buffers processed */
+//volatile uint32_t Adau1962Dac::DacCount = 0u;
+
 /*
  * DAC Callback.
  *
@@ -36,7 +39,7 @@ void DacCallback(void *pCBParam, uint32_t nEvent, void *pArg)
     {
         case ADI_SPORT_EVENT_TX_BUFFER_PROCESSED:
             /* Update callback count */
-            SpdifPlayback::DacCount++;
+        	//Adau1962Dac::DacCount++;
             /* store pointer to the processed buffer that caused the callback */
             SpdifPlayback::pGetDAC = pArg;
             break;

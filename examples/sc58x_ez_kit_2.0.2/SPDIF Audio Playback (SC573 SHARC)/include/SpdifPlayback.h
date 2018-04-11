@@ -28,10 +28,6 @@ class SpdifPlayback {
 private:
 	void ProcessBuffers(void);
 public:
-	/* Counter to keep track of number of ADC buffers processed */
-	static volatile uint32_t AsrcCount;
-	/* Counter to keep track of number of DAC buffers processed */
-	static volatile uint32_t DacCount;
 
 	/* DAC buffer pointer */
 	static volatile void *pGetASRC;

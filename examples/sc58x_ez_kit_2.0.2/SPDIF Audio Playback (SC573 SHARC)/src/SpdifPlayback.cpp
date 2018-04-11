@@ -17,10 +17,6 @@
 ///* DAC callback */
 //void DacCallback(void *pCBParam, uint32_t nEvent, void *pArg);
 
-/* Counter to keep track of number of ADC buffers processed */
-volatile uint32_t SpdifPlayback::AsrcCount = 0u;
-/* Counter to keep track of number of DAC buffers processed */
-volatile uint32_t SpdifPlayback::DacCount = 0u;
 
 /* DAC buffer pointer */
 volatile void* SpdifPlayback::pGetASRC = NULL;
@@ -117,7 +113,7 @@ void SpdifPlayback::ProcessBuffers(void) {
     {
 
         /* DAC cannot be started until the first two ping-pong ASRC buffers are processed */
-        if(SpdifPlayback::AsrcCount == 2)
+        if(AsynchronousRateConverter::AsrcCount == 2)
         {
             /* enable data flow */
         	dac.Enable();

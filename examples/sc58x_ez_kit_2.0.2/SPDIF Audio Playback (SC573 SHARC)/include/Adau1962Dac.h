@@ -20,6 +20,8 @@ private:
 	static uint8_t TwiMemory[ADI_TWI_MEMORY_SIZE];
 public:
 	static ADI_ADAU1962A_HANDLE phAdau1962a;
+	/* Counter to keep track of number of DAC buffers processed */
+	//static volatile uint32_t DacCount;
 
 	Adau1962Dac();
 	virtual ~Adau1962Dac();
