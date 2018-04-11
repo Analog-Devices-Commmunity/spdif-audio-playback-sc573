@@ -37,10 +37,11 @@ void AsrcCallback(void *pCBParam, uint32_t nEvent, void *pArg)
             /* Update callback count */
         	//AsynchronousRateConverter::AsrcCount++;
             /* store pointer to the processed buffer that caused the callback */
-            SpdifPlayback::pGetASRC = pArg;
+            //SpdifPlayback::pGetASRC = pArg;
+        	SpdifPlayback::ProcessAsrcBuffer(pArg);
             break;
         default:
-            SpdifPlayback::bEventError = true;
+            SpdifPlayback::SetErrorTrue();
             break;
     }
 }
@@ -128,7 +129,7 @@ void AsynchronousRateConverter::CheckAsrcResult(ADI_ASRC_RESULT expected, ADI_AS
 		char message[96];
 		sprintf(message, "AsynchronousRateConverter::%s expected(%d) != result(%d)", message, expected, result);
 		perror(message);
-		SpdifPlayback::bEventError = true;
+		SpdifPlayback::SetErrorTrue();
 		if (stop) abort();
 	}
 }

@@ -29,20 +29,22 @@ public:
 	SpdifPlayback();
 	virtual ~SpdifPlayback();
 	void Run();
+	static void SetErrorTrue();
+	static void ProcessAsrcBuffer(void* buffer);
 
-	/* Flag to register callback error */
-	static volatile bool bEventError;
-	/* DAC buffer pointer */
-	static volatile void *pGetASRC;
 	/* ADC buffer pointer */
 	static volatile void *pGetDAC;
 
 private:
 	void ProcessBuffers(void);
 
+	/* DAC buffer pointer */
+	static volatile void *pGetASRC;
 
 	static void *pASRC;
 	static void *pDAC;
+	/* Flag to register callback error */
+	static volatile bool bEventError;
 
 
     PowerService ps;

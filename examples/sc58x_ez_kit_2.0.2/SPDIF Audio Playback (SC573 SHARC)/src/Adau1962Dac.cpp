@@ -42,7 +42,7 @@ void DacCallback(void *pCBParam, uint32_t nEvent, void *pArg)
             SpdifPlayback::pGetDAC = pArg;
             break;
         default:
-            SpdifPlayback::bEventError = true;
+            SpdifPlayback::SetErrorTrue();
             break;
    }
 }
@@ -186,7 +186,7 @@ void Adau1962Dac::CheckAdau1962aResult(ADI_ADAU1962A_RESULT expected, ADI_ADAU19
 		char message[96];
 		sprintf(message, "SpdifDevice::%s expected(%d) != result(%d)", message, expected, result);
 		perror(message);
-		SpdifPlayback::bEventError = true;
+		SpdifPlayback::SetErrorTrue();
 		if (stop) abort();
 	}
 }

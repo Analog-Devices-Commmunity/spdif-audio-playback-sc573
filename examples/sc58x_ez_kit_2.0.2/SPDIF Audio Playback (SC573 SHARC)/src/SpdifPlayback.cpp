@@ -28,6 +28,15 @@ SpdifPlayback::SpdifPlayback()
 SpdifPlayback::~SpdifPlayback() {
 }
 
+void SpdifPlayback::SetErrorTrue() {
+	bEventError = true;
+}
+
+void SpdifPlayback::ProcessAsrcBuffer(void* buffer) {
+	SpdifPlayback::pGetASRC = buffer;
+}
+
+
 void SpdifPlayback::Run() {
     /* Enable the ASRC */
     asrc.Enable();
