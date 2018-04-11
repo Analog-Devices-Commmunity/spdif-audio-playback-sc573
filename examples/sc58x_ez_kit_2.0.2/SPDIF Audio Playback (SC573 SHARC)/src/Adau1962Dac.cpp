@@ -140,7 +140,9 @@ Adau1962Dac::Adau1962Dac() {
 }
 
 Adau1962Dac::~Adau1962Dac() {
-	// TODO Auto-generated destructor stub
+    /* Disable and close DAC */
+    Disable();
+    Close();
 }
 
 void Adau1962Dac::Adau1962aSubmitBuffers(void) {

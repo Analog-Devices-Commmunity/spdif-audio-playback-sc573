@@ -44,7 +44,9 @@ void SpdifDevice::Close() {
 }
 
 SpdifDevice::~SpdifDevice() {
-	// TODO Auto-generated destructor stub
+    // close devices
+    Disable();
+    Close();
 }
 
 void SpdifDevice::CheckSpdifResult(ADI_SPDIF_RX_RESULT expected, ADI_SPDIF_RX_RESULT result) {

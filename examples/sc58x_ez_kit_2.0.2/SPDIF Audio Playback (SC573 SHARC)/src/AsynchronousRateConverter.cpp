@@ -16,8 +16,6 @@ ADI_ASRC_HANDLE AsynchronousRateConverter::phAsrc0;
 /* ASRC SPORT configuration */
 uint8_t AsynchronousRateConverter::OpAsrcSportMemory[ADI_SPORT_DMA_MEMORY_SIZE];
 ADI_ASRC_SPORT_CONFIG AsynchronousRateConverter::OpAsrcSportConfig;
-/* Counter to keep track of number of ADC buffers processed */
-//volatile uint32_t AsynchronousRateConverter::AsrcCount = 0u;
 
 ADI_CACHE_ALIGN int8_t AsynchronousRateConverter::AsrcBuf[ADI_CACHE_ROUND_UP_SIZE(AUDIO_BUFFER_SIZE * 2, int8_t)];
 
@@ -83,7 +81,9 @@ AsynchronousRateConverter::AsynchronousRateConverter() {
 }
 
 AsynchronousRateConverter::~AsynchronousRateConverter() {
-	// TODO Auto-generated destructor stub
+    /* Disable and close ASRC */
+    Disable();
+    Close();
 }
 
 void AsynchronousRateConverter::AsrcSubmitBuffers(void) {

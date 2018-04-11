@@ -66,7 +66,9 @@ void PrecisionClockGenerator::Close() {
 }
 
 PrecisionClockGenerator::~PrecisionClockGenerator() {
-	// TODO Auto-generated destructor stub
+	/* Disable and close PCG */
+    Disable();
+    Close();
 }
 
 void PrecisionClockGenerator::CheckPcgResult(ADI_PCG_RESULT expected, ADI_PCG_RESULT actual) {

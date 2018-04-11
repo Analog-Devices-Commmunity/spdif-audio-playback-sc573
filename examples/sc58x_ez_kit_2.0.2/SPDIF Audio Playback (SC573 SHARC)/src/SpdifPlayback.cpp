@@ -51,21 +51,6 @@ SpdifPlayback::SpdifPlayback()
 }
 
 SpdifPlayback::~SpdifPlayback() {
-    // close devices
-    spdif.Disable();
-    spdif.Close();
-
-    /* Disable and close DAC */
-    dac.Disable();
-    dac.Close();
-
-    /* Disable and close ASRC */
-    asrc.Disable();
-    asrc.Close();
-
-	/* Disable and close PCG */
-    pcg.Disable();
-    pcg.Close();
 }
 
 void SpdifPlayback::Run() {
@@ -79,9 +64,8 @@ void SpdifPlayback::Run() {
         /* check if an error has been detected in callback */
         if(bEventError)
         {
-			abort();
+			break;
         }
-
     }
 }
 
@@ -96,24 +80,14 @@ void SpdifPlayback::ProcessBuffers(void) {
     /* re-submit the ASRC output buffer */
     if(SpdifPlayback::pGetASRC != NULL)
     {
-
-//        /* DAC cannot be started until the first two ping-pong ASRC buffers are processed */
-//        if(AsynchronousRateConverter::AsrcCount == 2)
-//        {
-//            /* enable data flow */
-//        	dac.Enable();
-//
-//        }
-
     	SpdifPlayback::pASRC = (void *)SpdifPlayback::pGetASRC;
 
         /* submit the ADC buffer */
-    	// TODO
+
         eResult1 = adi_asrc_OpSubmitBuffer(AsynchronousRateConverter::phAsrc0, (void *) SpdifPlayback::pASRC, AUDIO_BUFFER_SIZE);
 		if(eResult1)
 		{
-			//return 1u;
-			abort();
+			SpdifPlayback::bEventError = true;
 		}
         SpdifPlayback::pGetASRC = NULL;
     }
@@ -138,7 +112,6 @@ void SpdifPlayback::ProcessBuffers(void) {
         for(i=0; i<AUDIO_BUFFER_SIZE;i++)
         {
             *pDst++ = *pSrc++;
-
         }
 
         SpdifPlayback::pDAC = NULL;

@@ -21,16 +21,8 @@ to the terms of the associated Analog Devices License Agreement.
 
 /*=============  I N C L U D E S   =============*/
 
-
-#include <sys/platform.h>
-/* SPU Manager includes */
-#include <stdio.h>
-#include <string.h>
-#include <math.h>
-#include "../include/spdif_playback.h"
-#include "adi_initialize.h"
 #include "../include/SpdifPlayback.h"
-#include <SRU.h>
+
 
 /*=============  C O D E  =============*/
 
