@@ -11,12 +11,13 @@
 #include <services/gpio/adi_gpio.h>
 
 class GeneralPurposeIO {
-private:
-	static uint8_t GpioMemory[ADI_GPIO_CALLBACK_MEM_SIZE];
-	static uint32_t gpioMaxCallbacks;
 public:
 	GeneralPurposeIO();
 	virtual ~GeneralPurposeIO();
+private:
+	static uint8_t GpioMemory[ADI_GPIO_CALLBACK_MEM_SIZE];
+	static uint32_t gpioMaxCallbacks;
+
 	static void CheckGpioResult(ADI_GPIO_RESULT expected, ADI_GPIO_RESULT result);
 };
 

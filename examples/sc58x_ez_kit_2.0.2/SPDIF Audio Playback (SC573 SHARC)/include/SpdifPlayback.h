@@ -25,22 +25,25 @@
 
 
 class SpdifPlayback {
-private:
-	void ProcessBuffers(void);
-
-
 public:
+	SpdifPlayback();
+	virtual ~SpdifPlayback();
+	void Run();
 
+	/* Flag to register callback error */
+	static volatile bool bEventError;
 	/* DAC buffer pointer */
 	static volatile void *pGetASRC;
 	/* ADC buffer pointer */
 	static volatile void *pGetDAC;
 
+private:
+	void ProcessBuffers(void);
+
+
 	static void *pASRC;
 	static void *pDAC;
 
-	/* Flag to register callback error */
-	static volatile bool bEventError;
 
     PowerService ps;
 
@@ -61,10 +64,6 @@ public:
 
     /* Initialize ADAU1962A */
     Adau1962Dac dac;//(DacCallback);
-//public:
-	SpdifPlayback();
-	virtual ~SpdifPlayback();
-	void Run();
 };
 
 #endif /* SPDIFPLAYBACK_H_ */

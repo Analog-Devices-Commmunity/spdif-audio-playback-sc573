@@ -14,6 +14,7 @@ class PowerService {
 public:
 	PowerService();
 	virtual ~PowerService();
+private:
 	static void CheckPwrResult(ADI_PWR_RESULT expected, ADI_PWR_RESULT result);
 };
 

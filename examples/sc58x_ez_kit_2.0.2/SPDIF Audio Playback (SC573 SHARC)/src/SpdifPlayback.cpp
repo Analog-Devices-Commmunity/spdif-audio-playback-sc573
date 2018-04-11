@@ -57,8 +57,6 @@ void SpdifPlayback::Run() {
 }
 
 void SpdifPlayback::ProcessBuffers(void) {
-    ADI_ADAU1962A_RESULT    eResult2;
-
     uint32_t i =0u;
     int8_t *pSrc;
     int8_t *pDst;
@@ -81,7 +79,6 @@ void SpdifPlayback::ProcessBuffers(void) {
 
         /* submit the DAC buffer */
         dac.SubmitBuffer(SpdifPlayback::pDAC);
-        //eResult2 = adi_adau1962a_SubmitBuffer(Adau1962Dac::phAdau1962a, (void *) SpdifPlayback::pDAC, AUDIO_BUFFER_SIZE);
 
         SpdifPlayback::pGetDAC = NULL;
     }

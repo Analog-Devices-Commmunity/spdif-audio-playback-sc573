@@ -11,14 +11,15 @@
 #include <services/pcg/adi_pcg.h>
 
 class PrecisionClockGenerator {
-private:
-	/* PCG - A */
-	static uint8_t PcgMemoryA[ADI_PCG_MEMORY_SIZE];
-	static ADI_PCG_HANDLE phPcgA;
 public:
 	PrecisionClockGenerator();
 	virtual ~PrecisionClockGenerator();
 	void Enable();
+private:
+	/* PCG - A */
+	static uint8_t PcgMemoryA[ADI_PCG_MEMORY_SIZE];
+	static ADI_PCG_HANDLE phPcgA;
+
 	void Disable();
 	void Close();
 	static void CheckPcgResult(ADI_PCG_RESULT expected, ADI_PCG_RESULT actual);
