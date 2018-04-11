@@ -29,12 +29,6 @@ void* SpdifPlayback::pDAC;
 /* Flag to register callback error */
 volatile bool SpdifPlayback::bEventError = false;
 
-ADI_CACHE_ALIGN int8_t SpdifPlayback::AsrcBuf[ADI_CACHE_ROUND_UP_SIZE(AUDIO_BUFFER_SIZE * 2, int8_t)];
-
-/* Dac linear buffer that is divided into 2 sub buffers; ping and pong  */
-int8_t SpdifPlayback::DacBuf[AUDIO_BUFFER_SIZE * 2];
-
-
 SpdifPlayback::SpdifPlayback()
 {
     /* Submit ASRC buffers */
@@ -78,23 +72,11 @@ void SpdifPlayback::Run() {
     {
         /* Process audio buffers */
     	ProcessBuffers();
-        //Result = ProcessBuffers();
-
-//        /* IF (Error) */
-//        if(Result != 0u)
-//        {
-//            /* exit loopback */
-//            break;
-//        }
 
         /* check if an error has been detected in callback */
         if(bEventError)
         {
 			abort();
-
-            /* there has been an error returned in the callback */
-//            Result =1u;
-//            break;
         }
 
     }

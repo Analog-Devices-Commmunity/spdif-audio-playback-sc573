@@ -9,6 +9,7 @@
 #define ASYNCHRONOUSRATECONVERTER_H_
 
 #include <drivers/asrc/adi_asrc.h>
+#include "spdif_playback.h"
 
 class AsynchronousRateConverter {
 private:
@@ -16,6 +17,9 @@ private:
 	/* ASRC SPORT configuration */
 	static uint8_t OpAsrcSportMemory[ADI_SPORT_DMA_MEMORY_SIZE];
 	static ADI_ASRC_SPORT_CONFIG OpAsrcSportConfig;
+	/* Adc linear buffer that is divided into 2 sub buffers; ping and pong */
+	ADI_CACHE_ALIGN static int8_t AsrcBuf[ADI_CACHE_ROUND_UP_SIZE(AUDIO_BUFFER_SIZE * 2, int8_t)];
+
 public:
 	AsynchronousRateConverter();
 	virtual ~AsynchronousRateConverter();

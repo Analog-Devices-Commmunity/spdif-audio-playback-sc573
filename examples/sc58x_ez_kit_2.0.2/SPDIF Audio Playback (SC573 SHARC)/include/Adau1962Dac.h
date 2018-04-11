@@ -9,6 +9,7 @@
 #define ADAU1962DAC_H_
 
 #include <drivers/dac/adau1962a/adi_adau1962a.h>
+#include "spdif_playback.h"
 
 class Adau1962Dac {
 private:
@@ -18,6 +19,8 @@ private:
 	static uint8_t Adau1962aSportMemory[ADI_SPORT_DMA_MEMORY_SIZE];
 	/* Twi  */
 	static uint8_t TwiMemory[ADI_TWI_MEMORY_SIZE];
+	/* Dac linear buffer that is divided into 2 sub buffers; ping and pong  */
+	static int8_t DacBuf[AUDIO_BUFFER_SIZE * 2];
 public:
 	static ADI_ADAU1962A_HANDLE phAdau1962a;
 	/* Counter to keep track of number of DAC buffers processed */

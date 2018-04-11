@@ -20,6 +20,9 @@ uint8_t Adau1962Dac::Adau1962aSportMemory[ADI_SPORT_DMA_MEMORY_SIZE];
 ADI_ADAU1962A_HANDLE Adau1962Dac::phAdau1962a;
 uint8_t Adau1962Dac::TwiMemory[ADI_TWI_MEMORY_SIZE];
 
+/* Dac linear buffer that is divided into 2 sub buffers; ping and pong  */
+int8_t Adau1962Dac::DacBuf[AUDIO_BUFFER_SIZE * 2];
+
 /* Counter to keep track of number of DAC buffers processed */
 //volatile uint32_t Adau1962Dac::DacCount = 0u;
 
@@ -143,11 +146,11 @@ Adau1962Dac::~Adau1962Dac() {
 
 void Adau1962Dac::Adau1962aSubmitBuffers(void) {
     /* submit ping buffer */
-	ADI_ADAU1962A_RESULT result = adi_adau1962a_SubmitBuffer(Adau1962Dac::phAdau1962a, &SpdifPlayback::DacBuf[AUDIO_BUFFER_SIZE * 0u], AUDIO_BUFFER_SIZE);
+	ADI_ADAU1962A_RESULT result = adi_adau1962a_SubmitBuffer(Adau1962Dac::phAdau1962a, &Adau1962Dac::DacBuf[AUDIO_BUFFER_SIZE * 0u], AUDIO_BUFFER_SIZE);
 	CheckAdau1962aResult(ADI_ADAU1962A_SUCCESS, result);
 
     /* submit pong buffer */
-	result = adi_adau1962a_SubmitBuffer(Adau1962Dac::phAdau1962a, &SpdifPlayback::DacBuf[AUDIO_BUFFER_SIZE * 1u], AUDIO_BUFFER_SIZE);
+	result = adi_adau1962a_SubmitBuffer(Adau1962Dac::phAdau1962a, &Adau1962Dac::DacBuf[AUDIO_BUFFER_SIZE * 1u], AUDIO_BUFFER_SIZE);
 	CheckAdau1962aResult(ADI_ADAU1962A_SUCCESS, result);
 }
 

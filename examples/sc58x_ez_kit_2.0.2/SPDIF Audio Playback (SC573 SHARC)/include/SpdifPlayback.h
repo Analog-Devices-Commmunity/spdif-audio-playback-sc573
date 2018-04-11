@@ -40,13 +40,6 @@ public:
 	/* Flag to register callback error */
 	static volatile bool bEventError;
 
-	// TODO flytta till AsynchronousRateConverter?
-	/* Adc linear buffer that is divided into 2 sub buffers; ping and pong */
-	ADI_CACHE_ALIGN static int8_t AsrcBuf[ADI_CACHE_ROUND_UP_SIZE(AUDIO_BUFFER_SIZE * 2, int8_t)];
-
-	/* Dac linear buffer that is divided into 2 sub buffers; ping and pong  */
-	static int8_t DacBuf[AUDIO_BUFFER_SIZE * 2];
-
     PowerService ps;
 
     /* Initialize SPU */

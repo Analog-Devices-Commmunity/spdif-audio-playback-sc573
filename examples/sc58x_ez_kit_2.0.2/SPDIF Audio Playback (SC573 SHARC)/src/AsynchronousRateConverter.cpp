@@ -19,6 +19,8 @@ ADI_ASRC_SPORT_CONFIG AsynchronousRateConverter::OpAsrcSportConfig;
 /* Counter to keep track of number of ADC buffers processed */
 volatile uint32_t AsynchronousRateConverter::AsrcCount = 0u;
 
+ADI_CACHE_ALIGN int8_t AsynchronousRateConverter::AsrcBuf[ADI_CACHE_ROUND_UP_SIZE(AUDIO_BUFFER_SIZE * 2, int8_t)];
+
 /*
  * ADC Callback.
  *
@@ -81,11 +83,11 @@ AsynchronousRateConverter::~AsynchronousRateConverter() {
 
 void AsynchronousRateConverter::AsrcSubmitBuffers(void) {
     /* submit ping buffer */
-	ADI_ASRC_RESULT result = adi_asrc_OpSubmitBuffer(AsynchronousRateConverter::phAsrc0, &SpdifPlayback::AsrcBuf[AUDIO_BUFFER_SIZE * 0u], AUDIO_BUFFER_SIZE);
+	ADI_ASRC_RESULT result = adi_asrc_OpSubmitBuffer(AsynchronousRateConverter::phAsrc0, &AsynchronousRateConverter::AsrcBuf[AUDIO_BUFFER_SIZE * 0u], AUDIO_BUFFER_SIZE);
 	CheckAsrcResult(ADI_ASRC_SUCCESS, result);
 
     /* submit pong buffer */
-	result = adi_asrc_OpSubmitBuffer(AsynchronousRateConverter::phAsrc0, &SpdifPlayback::AsrcBuf[AUDIO_BUFFER_SIZE * 1u], AUDIO_BUFFER_SIZE);
+	result = adi_asrc_OpSubmitBuffer(AsynchronousRateConverter::phAsrc0, &AsynchronousRateConverter::AsrcBuf[AUDIO_BUFFER_SIZE * 1u], AUDIO_BUFFER_SIZE);
 	CheckAsrcResult(ADI_ASRC_SUCCESS, result);
 
 }
