@@ -6,8 +6,8 @@
  */
 
 #include <stddef.h>
-#include "SystemProtectionService.h"
-#include "../../../../spdif_playback.h"
+#include "../include/SystemProtectionService.h"
+#include "../include/spdif_playback.h"
 #include <stdio.h>
 #include <stdlib.h>
 

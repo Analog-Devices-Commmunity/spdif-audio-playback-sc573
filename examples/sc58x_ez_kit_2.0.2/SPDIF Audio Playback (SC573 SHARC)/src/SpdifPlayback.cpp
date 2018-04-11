@@ -5,7 +5,8 @@
  *      Author: more10
  */
 
-#include "SpdifPlayback.h"
+#include "../include/spdif_playback.h"
+#include "../include/SpdifPlayback.h"
 #include <stdlib.h>
 #include <stdio.h>
 

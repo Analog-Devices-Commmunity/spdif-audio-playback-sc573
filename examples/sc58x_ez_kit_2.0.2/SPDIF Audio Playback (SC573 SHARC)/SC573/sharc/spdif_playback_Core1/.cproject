@@ -110,8 +110,26 @@
 							<tool id="sharc.toolchain.loader.324158169" name="CrossCore SHARC Loader" superClass="sharc.toolchain.loader.1803751199"/>
 						</toolChain>
 					</folderInfo>
+					<folderInfo id="sharc.toolchain.configuration.debug.1717642350.1027279238" name="/" resourcePath="src">
+						<toolChain id="sharc.toolchain.149852354" name="CrossCore SHARC Toolchain" superClass="sharc.toolchain" unusedChildren="">
+							<tool id="sharc.toolchain.assembler.1130103248" name="CrossCore SHARC Assembler" superClass="sharc.toolchain.assembler.563921038">
+								<option id="assembler.option.additionaldirectories.366195268" superClass="assembler.option.additionaldirectories" valueType="includePath">
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/system}&quot;"/>
+									<listOptionValue builtIn="false" value="/$(ProjName)/../../include"/>
+								</option>
+								<inputType id="assembler.input.1664521583" name="Assembler Source" superClass="assembler.input"/>
+							</tool>
+							<tool id="sharc.toolchain.compiler.146267600" name="CrossCore SHARC C/C++ Compiler" superClass="sharc.toolchain.compiler.1156976851">
+								<inputType id="compiler.inputType.678747553" name="C/C++ Source" superClass="compiler.inputType"/>
+							</tool>
+							<tool id="sharc.toolchain.linker.861190230" name="CrossCore SHARC Linker" superClass="sharc.toolchain.linker.1252937140"/>
+							<tool id="sharc.toolchain.archiver.2032971526" name="CrossCore SHARC Archiver" superClass="sharc.toolchain.archiver.827923187"/>
+							<tool id="sharc.toolchain.loader.807553578" name="CrossCore SHARC Loader" superClass="sharc.toolchain.loader.1803751199"/>
+						</toolChain>
+					</folderInfo>
 					<sourceEntries>
-						<entry excluding="system|src" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
+						<entry excluding="include|system|src" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
+						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="include"/>
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="src"/>
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="system"/>
 					</sourceEntries>
@@ -218,7 +236,8 @@
 						</toolChain>
 					</folderInfo>
 					<sourceEntries>
-						<entry excluding="system|src" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
+						<entry excluding="include|system|src" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
+						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="include"/>
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="src"/>
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="system"/>
 					</sourceEntries>
@@ -244,4 +263,5 @@
 		</project-mappings>
 	</storageModule>
 	<storageModule moduleId="refreshScope"/>
+	<storageModule moduleId="org.eclipse.cdt.make.core.buildtargets"/>
 </cproject>

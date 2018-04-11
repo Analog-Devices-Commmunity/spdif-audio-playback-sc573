@@ -5,9 +5,9 @@
  *      Author: more10
  */
 
-#include "AsynchronousRateConverter.h"
-#include "SpdifPlayback.h"
-#include "../../../../spdif_playback.h"
+#include "../include/AsynchronousRateConverter.h"
+#include "../include/SpdifPlayback.h"
+#include "../include/spdif_playback.h"
 #include <stdio.h>
 #include <stdlib.h>
 

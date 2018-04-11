@@ -5,8 +5,8 @@
  *      Author: more10
  */
 
-#include "PrecisionClockGenerator.h"
-#include "../../../../spdif_playback.h"
+#include "../include/PrecisionClockGenerator.h"
+#include "../include/spdif_playback.h"
 #include <stdio.h>
 #include <stdlib.h>
 

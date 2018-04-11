@@ -27,16 +27,9 @@ to the terms of the associated Analog Devices License Agreement.
 #include <stdio.h>
 #include <string.h>
 #include <math.h>
-#include "../../../../spdif_playback.h"
+#include "../include/spdif_playback.h"
 #include "adi_initialize.h"
-//#include "PowerService.h"
-//#include "SystemProtectionService.h"
-//#include "PrecisionClockGenerator.h"
-//#include "GeneralPurposeIO.h"
-//#include "SpdifDevice.h"
-//#include "AsynchronousRateConverter.h"
-//#include "Adau1962Dac.h"
-#include "SpdifPlayback.h"
+#include "../include/SpdifPlayback.h"
 #include <SRU.h>
 
 /*=============  C O D E  =============*/

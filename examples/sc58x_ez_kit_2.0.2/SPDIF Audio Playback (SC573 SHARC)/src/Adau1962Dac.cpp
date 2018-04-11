@@ -5,9 +5,9 @@
  *      Author: more10
  */
 
-#include "Adau1962Dac.h"
-#include "SpdifPlayback.h"
-#include "../../../../spdif_playback.h"
+#include "../include/Adau1962Dac.h"
+#include "../include/SpdifPlayback.h"
+#include "../include/spdif_playback.h"
 #include <stdio.h>
 #include <stdlib.h>
 

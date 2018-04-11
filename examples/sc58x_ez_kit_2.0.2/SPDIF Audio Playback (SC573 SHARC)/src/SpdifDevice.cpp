@@ -5,8 +5,8 @@
  *      Author: more10
  */
 
-#include "SpdifDevice.h"
-#include "../../../../spdif_playback.h"
+#include "../include/SpdifDevice.h"
+#include "../include/spdif_playback.h"
 #include <stdio.h>
 #include <stdlib.h>
 

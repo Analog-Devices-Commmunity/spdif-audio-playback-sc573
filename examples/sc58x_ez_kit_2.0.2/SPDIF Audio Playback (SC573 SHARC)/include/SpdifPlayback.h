@@ -12,7 +12,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <math.h>
-#include "../../../../spdif_playback.h"
+#include "spdif_playback.h"
 #include "adi_initialize.h"
 #include "PowerService.h"
 #include "SystemProtectionService.h"

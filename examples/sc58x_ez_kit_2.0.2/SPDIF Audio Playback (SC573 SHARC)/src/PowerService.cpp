@@ -5,9 +5,9 @@
  *      Author: more10
  */
 
-#include "PowerService.h"
+#include "../include/PowerService.h"
 
-#include "../../../../spdif_playback.h"
+#include "../include/spdif_playback.h"
 #include <stdio.h>
 #include <stdlib.h>
 
