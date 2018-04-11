@@ -86,6 +86,15 @@ AsynchronousRateConverter::~AsynchronousRateConverter() {
     Close();
 }
 
+void AsynchronousRateConverter::SubmitBuffer(void* buffer) {
+	ADI_ASRC_RESULT eResult1;
+	eResult1 = adi_asrc_OpSubmitBuffer(AsynchronousRateConverter::phAsrc0,
+			buffer, AUDIO_BUFFER_SIZE);
+	if (eResult1) {
+		SpdifPlayback::bEventError = true;
+	}
+}
+
 void AsynchronousRateConverter::AsrcSubmitBuffers(void) {
     /* submit ping buffer */
 	ADI_ASRC_RESULT result = adi_asrc_OpSubmitBuffer(AsynchronousRateConverter::phAsrc0, &AsynchronousRateConverter::AsrcBuf[AUDIO_BUFFER_SIZE * 0u], AUDIO_BUFFER_SIZE);

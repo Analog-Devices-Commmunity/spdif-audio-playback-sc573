@@ -27,6 +27,8 @@
 class SpdifPlayback {
 private:
 	void ProcessBuffers(void);
+
+
 public:
 
 	/* DAC buffer pointer */

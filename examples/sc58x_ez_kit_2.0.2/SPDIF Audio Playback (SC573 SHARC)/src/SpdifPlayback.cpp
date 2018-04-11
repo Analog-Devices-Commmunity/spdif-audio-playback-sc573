@@ -69,8 +69,9 @@ void SpdifPlayback::Run() {
     }
 }
 
+
+
 void SpdifPlayback::ProcessBuffers(void) {
-    ADI_ASRC_RESULT         eResult1;
     ADI_ADAU1962A_RESULT    eResult2;
 
     uint32_t i =0u;
@@ -83,12 +84,8 @@ void SpdifPlayback::ProcessBuffers(void) {
     	SpdifPlayback::pASRC = (void *)SpdifPlayback::pGetASRC;
 
         /* submit the ADC buffer */
+    	asrc.SubmitBuffer(SpdifPlayback::pASRC);
 
-        eResult1 = adi_asrc_OpSubmitBuffer(AsynchronousRateConverter::phAsrc0, (void *) SpdifPlayback::pASRC, AUDIO_BUFFER_SIZE);
-		if(eResult1)
-		{
-			SpdifPlayback::bEventError = true;
-		}
         SpdifPlayback::pGetASRC = NULL;
     }
 
