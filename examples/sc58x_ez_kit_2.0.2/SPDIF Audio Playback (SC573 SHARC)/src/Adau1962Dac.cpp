@@ -184,7 +184,7 @@ void Adau1962Dac::CheckAdau1962aResult(ADI_ADAU1962A_RESULT expected, ADI_ADAU19
 	if ( result != expected )
 	{
 		char message[96];
-		sprintf(message, "SpdifDevice::%s expected(%d) != result(%d)", method, expected, result);
+		sprintf(message, "Adau1962Dac::%s expected(%d) != result(%d)", method, expected, result);
 		perror(message);
 		SpdifPlayback::SetErrorTrue();
 		if (stop) abort();
