@@ -41,47 +41,47 @@
 		<link>
 			<name>include/Adau1962Dac.h</name>
 			<type>1</type>
-			<location>C:/Users/more10/git/CCES/examples/sc58x_ez_kit_2.0.2/SPDIF Audio Playback (SC573 SHARC)/include/Adau1962Dac.h</location>
+			<location>../../../include/Adau1962Dac.h</location>
 		</link>
 		<link>
 			<name>include/AsynchronousRateConverter.h</name>
 			<type>1</type>
-			<location>C:/Users/more10/git/CCES/examples/sc58x_ez_kit_2.0.2/SPDIF Audio Playback (SC573 SHARC)/include/AsynchronousRateConverter.h</location>
+			<location>../../../include/AsynchronousRateConverter.h</location>
 		</link>
 		<link>
 			<name>include/GeneralPurposeIO.h</name>
 			<type>1</type>
-			<location>C:/Users/more10/git/CCES/examples/sc58x_ez_kit_2.0.2/SPDIF Audio Playback (SC573 SHARC)/include/GeneralPurposeIO.h</location>
+			<location>../../../include/GeneralPurposeIO.h</location>
 		</link>
 		<link>
 			<name>include/PowerService.h</name>
 			<type>1</type>
-			<location>C:/Users/more10/git/CCES/examples/sc58x_ez_kit_2.0.2/SPDIF Audio Playback (SC573 SHARC)/include/PowerService.h</location>
+			<location>../../../include/PowerService.h</location>
 		</link>
 		<link>
 			<name>include/PrecisionClockGenerator.h</name>
 			<type>1</type>
-			<location>C:/Users/more10/git/CCES/examples/sc58x_ez_kit_2.0.2/SPDIF Audio Playback (SC573 SHARC)/include/PrecisionClockGenerator.h</location>
+			<location>../../../include/PrecisionClockGenerator.h</location>
 		</link>
 		<link>
 			<name>include/SpdifDevice.h</name>
 			<type>1</type>
-			<location>C:/Users/more10/git/CCES/examples/sc58x_ez_kit_2.0.2/SPDIF Audio Playback (SC573 SHARC)/include/SpdifDevice.h</location>
+			<location>../../../include/SpdifDevice.h</location>
 		</link>
 		<link>
 			<name>include/SpdifPlayback.h</name>
 			<type>1</type>
-			<location>C:/Users/more10/git/CCES/examples/sc58x_ez_kit_2.0.2/SPDIF Audio Playback (SC573 SHARC)/include/SpdifPlayback.h</location>
+			<location>../../../include/SpdifPlayback.h</location>
 		</link>
 		<link>
 			<name>include/SystemProtectionService.h</name>
 			<type>1</type>
-			<location>C:/Users/more10/git/CCES/examples/sc58x_ez_kit_2.0.2/SPDIF Audio Playback (SC573 SHARC)/include/SystemProtectionService.h</location>
+			<location>../../../include/SystemProtectionService.h</location>
 		</link>
 		<link>
 			<name>include/spdif_playback.h</name>
 			<type>1</type>
-			<location>C:/Users/more10/git/CCES/examples/sc58x_ez_kit_2.0.2/SPDIF Audio Playback (SC573 SHARC)/include/spdif_playback.h</location>
+			<location>../../../include/spdif_playback.h</location>
 		</link>
 		<link>
 			<name>src/Adau1962Dac.cpp</name>
