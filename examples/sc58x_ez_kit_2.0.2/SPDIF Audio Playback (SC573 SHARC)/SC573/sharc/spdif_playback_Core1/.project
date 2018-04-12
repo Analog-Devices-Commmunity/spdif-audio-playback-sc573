@@ -86,47 +86,47 @@
 		<link>
 			<name>src/Adau1962Dac.cpp</name>
 			<type>1</type>
-			<location>C:/Users/more10/git/CCES/examples/sc58x_ez_kit_2.0.2/SPDIF Audio Playback (SC573 SHARC)/src/Adau1962Dac.cpp</location>
+			<location>../../../src/Adau1962Dac.cpp</location>
 		</link>
 		<link>
 			<name>src/AsynchronousRateConverter.cpp</name>
 			<type>1</type>
-			<location>C:/Users/more10/git/CCES/examples/sc58x_ez_kit_2.0.2/SPDIF Audio Playback (SC573 SHARC)/src/AsynchronousRateConverter.cpp</location>
+			<location>../../../src/AsynchronousRateConverter.cpp</location>
 		</link>
 		<link>
 			<name>src/GeneralPurposeIO.cpp</name>
 			<type>1</type>
-			<location>C:/Users/more10/git/CCES/examples/sc58x_ez_kit_2.0.2/SPDIF Audio Playback (SC573 SHARC)/src/GeneralPurposeIO.cpp</location>
+			<location>../../../src/GeneralPurposeIO.cpp</location>
 		</link>
 		<link>
 			<name>src/PowerService.cpp</name>
 			<type>1</type>
-			<location>C:/Users/more10/git/CCES/examples/sc58x_ez_kit_2.0.2/SPDIF Audio Playback (SC573 SHARC)/src/PowerService.cpp</location>
+			<location>../../../src/PowerService.cpp</location>
 		</link>
 		<link>
 			<name>src/PrecisionClockGenerator.cpp</name>
 			<type>1</type>
-			<location>C:/Users/more10/git/CCES/examples/sc58x_ez_kit_2.0.2/SPDIF Audio Playback (SC573 SHARC)/src/PrecisionClockGenerator.cpp</location>
+			<location>../../../src/PrecisionClockGenerator.cpp</location>
 		</link>
 		<link>
 			<name>src/SpdifDevice.cpp</name>
 			<type>1</type>
-			<location>C:/Users/more10/git/CCES/examples/sc58x_ez_kit_2.0.2/SPDIF Audio Playback (SC573 SHARC)/src/SpdifDevice.cpp</location>
+			<location>../../../src/SpdifDevice.cpp</location>
 		</link>
 		<link>
 			<name>src/SpdifPlayback.cpp</name>
 			<type>1</type>
-			<location>C:/Users/more10/git/CCES/examples/sc58x_ez_kit_2.0.2/SPDIF Audio Playback (SC573 SHARC)/src/SpdifPlayback.cpp</location>
+			<location>../../../src/SpdifPlayback.cpp</location>
 		</link>
 		<link>
 			<name>src/SystemProtectionService.cpp</name>
 			<type>1</type>
-			<location>C:/Users/more10/git/CCES/examples/sc58x_ez_kit_2.0.2/SPDIF Audio Playback (SC573 SHARC)/src/SystemProtectionService.cpp</location>
+			<location>../../../src/SystemProtectionService.cpp</location>
 		</link>
 		<link>
 			<name>src/spdif_playback.cpp</name>
 			<type>1</type>
-			<location>C:/Users/more10/git/CCES/examples/sc58x_ez_kit_2.0.2/SPDIF Audio Playback (SC573 SHARC)/src/spdif_playback.cpp</location>
+			<location>../../../src/spdif_playback.cpp</location>
 		</link>
 		<link>
 			<name>system/drivers/spdif/adi_spdif_rx.c</name>
