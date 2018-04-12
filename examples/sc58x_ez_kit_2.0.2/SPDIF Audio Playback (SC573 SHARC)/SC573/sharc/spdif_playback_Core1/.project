@@ -41,92 +41,92 @@
 		<link>
 			<name>include/Adau1962Dac.h</name>
 			<type>1</type>
-			<location>PROJECT_LOC/../../../include/Adau1962Dac.h</location>
+			<location>PARENT-3-PROJECT_LOC/include/Adau1962Dac.h</location>
 		</link>
 		<link>
 			<name>include/AsynchronousRateConverter.h</name>
 			<type>1</type>
-			<location>PROJECT_LOC/../../../include/AsynchronousRateConverter.h</location>
+			<location>PARENT-3-PROJECT_LOC/include/AsynchronousRateConverter.h</location>
 		</link>
 		<link>
 			<name>include/GeneralPurposeIO.h</name>
 			<type>1</type>
-			<location>PROJECT_LOC/../../../include/GeneralPurposeIO.h</location>
+			<location>PARENT-3-PROJECT_LOC/include/GeneralPurposeIO.h</location>
 		</link>
 		<link>
 			<name>include/PowerService.h</name>
 			<type>1</type>
-			<location>PROJECT_LOC/../../../include/PowerService.h</location>
+			<location>PARENT-3-PROJECT_LOC/include/PowerService.h</location>
 		</link>
 		<link>
 			<name>include/PrecisionClockGenerator.h</name>
 			<type>1</type>
-			<location>PROJECT_LOC/../../../include/PrecisionClockGenerator.h</location>
+			<location>PARENT-3-PROJECT_LOC/include/PrecisionClockGenerator.h</location>
 		</link>
 		<link>
 			<name>include/SpdifDevice.h</name>
 			<type>1</type>
-			<location>PROJECT_LOC/../../../include/SpdifDevice.h</location>
+			<location>PARENT-3-PROJECT_LOC/include/SpdifDevice.h</location>
 		</link>
 		<link>
 			<name>include/SpdifPlayback.h</name>
 			<type>1</type>
-			<location>PROJECT_LOC/../../../include/SpdifPlayback.h</location>
+			<location>PARENT-3-PROJECT_LOC/include/SpdifPlayback.h</location>
 		</link>
 		<link>
 			<name>include/SystemProtectionService.h</name>
 			<type>1</type>
-			<location>PROJECT_LOC/../../../include/SystemProtectionService.h</location>
+			<location>PARENT-3-PROJECT_LOC/include/SystemProtectionService.h</location>
 		</link>
 		<link>
 			<name>include/spdif_playback.h</name>
 			<type>1</type>
-			<location>PROJECT_LOC/../../../include/spdif_playback.h</location>
+			<location>PARENT-3-PROJECT_LOC/include/spdif_playback.h</location>
 		</link>
 		<link>
 			<name>src/Adau1962Dac.cpp</name>
 			<type>1</type>
-			<location>PROJECT_LOC/../../../src/Adau1962Dac.cpp</location>
+			<location>PARENT-3-PROJECT_LOC/src/Adau1962Dac.cpp</location>
 		</link>
 		<link>
 			<name>src/AsynchronousRateConverter.cpp</name>
 			<type>1</type>
-			<location>PROJECT_LOC/../../../src/AsynchronousRateConverter.cpp</location>
+			<location>PARENT-3-PROJECT_LOC/src/AsynchronousRateConverter.cpp</location>
 		</link>
 		<link>
 			<name>src/GeneralPurposeIO.cpp</name>
 			<type>1</type>
-			<location>PROJECT_LOC/../../../src/GeneralPurposeIO.cpp</location>
+			<location>PARENT-3-PROJECT_LOC/src/GeneralPurposeIO.cpp</location>
 		</link>
 		<link>
 			<name>src/PowerService.cpp</name>
 			<type>1</type>
-			<location>PROJECT_LOC/../../../src/PowerService.cpp</location>
+			<location>PARENT-3-PROJECT_LOC/src/PowerService.cpp</location>
 		</link>
 		<link>
 			<name>src/PrecisionClockGenerator.cpp</name>
 			<type>1</type>
-			<location>PROJECT_LOC/../../../src/PrecisionClockGenerator.cpp</location>
+			<location>PARENT-3-PROJECT_LOC/src/PrecisionClockGenerator.cpp</location>
 		</link>
 		<link>
 			<name>src/SpdifDevice.cpp</name>
 			<type>1</type>
-			<location>PROJECT_LOC/../../../src/SpdifDevice.cpp</location>
+			<location>PARENT-3-PROJECT_LOC/src/SpdifDevice.cpp</location>
 		</link>
 		<link>
 			<name>src/SpdifPlayback.cpp</name>
 			<type>1</type>
-			<location>PROJECT_LOC/../../../src/SpdifPlayback.cpp</location>
+			<location>PARENT-3-PROJECT_LOC/src/SpdifPlayback.cpp</location>
 		</link>
 		<link>
 			<name>src/SystemProtectionService.cpp</name>
 			<type>1</type>
-			<location>PROJECT_LOC/../../../src/SystemProtectionService.cpp</location>
+			<location>PARENT-3-PROJECT_LOC/src/SystemProtectionService.cpp</location>
 		</link>
 		<link>
 			<name>src/spdif_playback.cpp</name>
 			<type>1</type>
-			<location>PROJECT_LOC/../../../src/spdif_playback.cpp</location>
+			<location>PARENT-3-PROJECT_LOC/src/spdif_playback.cpp</location>
 		</link>
 		<link>
 			<name>system/drivers/spdif/adi_spdif_rx.c</name>
