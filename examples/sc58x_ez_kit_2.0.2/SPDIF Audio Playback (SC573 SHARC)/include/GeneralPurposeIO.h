@@ -19,7 +19,7 @@ private:
 	static uint8_t GpioMemory[ADI_GPIO_CALLBACK_MEM_SIZE];
 	static uint32_t gpioMaxCallbacks;
 
-	static void CheckGpioResult(ADI_GPIO_RESULT expected, ADI_GPIO_RESULT result, std::string message);
+	static void CheckGpioResult(ADI_GPIO_RESULT expected, ADI_GPIO_RESULT result, const char* method);
 };
 
 #endif /* GENERALPURPOSEIO_H_ */

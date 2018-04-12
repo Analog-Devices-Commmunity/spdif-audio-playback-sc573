@@ -32,7 +32,7 @@ private:
 	void Adau1962aSubmitBuffers(void);
 	void Disable();
 	void Close();
-	static void CheckAdau1962aResult(ADI_ADAU1962A_RESULT expected, ADI_ADAU1962A_RESULT result, std::string message, bool stop = true);
+	static void CheckAdau1962aResult(ADI_ADAU1962A_RESULT expected, ADI_ADAU1962A_RESULT result, const char* method, bool stop = true);
 
 };
 

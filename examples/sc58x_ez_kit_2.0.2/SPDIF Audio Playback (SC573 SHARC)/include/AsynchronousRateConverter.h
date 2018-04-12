@@ -27,7 +27,7 @@ private:
 	ADI_CACHE_ALIGN static int8_t AsrcBuf[ADI_CACHE_ROUND_UP_SIZE(AUDIO_BUFFER_SIZE * 2, int8_t)];
 	static ADI_ASRC_HANDLE phAsrc0;
 	void AsrcSubmitBuffers(void);
-	static void CheckAsrcResult(ADI_ASRC_RESULT expected, ADI_ASRC_RESULT result, std::string message, bool stop = true);
+	static void CheckAsrcResult(ADI_ASRC_RESULT expected, ADI_ASRC_RESULT result, const char* method, bool stop = true);
 	void Disable();
 	void Close();
 };

@@ -119,12 +119,12 @@ void AsynchronousRateConverter::Close() {
 	CheckAsrcResult(ADI_ASRC_SUCCESS, result, "Close");
 }
 
-void AsynchronousRateConverter::CheckAsrcResult(ADI_ASRC_RESULT expected, ADI_ASRC_RESULT result, std::string message, bool stop)
+void AsynchronousRateConverter::CheckAsrcResult(ADI_ASRC_RESULT expected, ADI_ASRC_RESULT result, const char* method, bool stop)
 {
 	if ( result != expected )
 	{
 		char message[96];
-		sprintf(message, "AsynchronousRateConverter::%s expected(%d) != result(%d)", message, expected, result);
+		sprintf(message, "AsynchronousRateConverter::%s expected(%d) != result(%d)", method, expected, result);
 		perror(message);
 		SpdifPlayback::SetErrorTrue();
 		if (stop) abort();

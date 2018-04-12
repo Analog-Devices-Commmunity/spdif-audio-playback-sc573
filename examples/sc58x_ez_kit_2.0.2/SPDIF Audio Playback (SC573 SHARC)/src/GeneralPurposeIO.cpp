@@ -40,11 +40,11 @@ GeneralPurposeIO::GeneralPurposeIO() {
 GeneralPurposeIO::~GeneralPurposeIO() {
 }
 
-void GeneralPurposeIO::CheckGpioResult(ADI_GPIO_RESULT expected, ADI_GPIO_RESULT result, std::string message) {
+void GeneralPurposeIO::CheckGpioResult(ADI_GPIO_RESULT expected, ADI_GPIO_RESULT result, const char* method) {
 	if ( result != expected )
 	{
 		char message[96];
-		sprintf(message, "GeneralPurposeIO::%s expected(%d) != result(%d)", message, expected, result);
+		sprintf(message, "GeneralPurposeIO::%s expected(%d) != result(%d)", method, expected, result);
 		perror(message);
 		abort();
 	}

@@ -180,11 +180,11 @@ void Adau1962Dac::Close() {
 }
 
 
-void Adau1962Dac::CheckAdau1962aResult(ADI_ADAU1962A_RESULT expected, ADI_ADAU1962A_RESULT result, std::string message, bool stop) {
+void Adau1962Dac::CheckAdau1962aResult(ADI_ADAU1962A_RESULT expected, ADI_ADAU1962A_RESULT result, const char* method, bool stop) {
 	if ( result != expected )
 	{
 		char message[96];
-		sprintf(message, "SpdifDevice::%s expected(%d) != result(%d)", message, expected, result);
+		sprintf(message, "SpdifDevice::%s expected(%d) != result(%d)", method, expected, result);
 		perror(message);
 		SpdifPlayback::SetErrorTrue();
 		if (stop) abort();
